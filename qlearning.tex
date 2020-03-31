@@ -1,0 +1,16 @@
+\begin{algorithm}[H]
+	\SetAlgoNoLine
+	\DontPrintSemicolon
+	Initialize action-value function $Q$ with random values\;
+	\For{timestep = 1}{
+	Initialise S\;
+	\While{S is not done state}{
+	With probability $\varepsilon$ choose random action $a_t$\;
+	Else, pick $a_t = \max_{a}Q(s_t, a)$\;
+	Take action $a_t$ and observse reward $r_t$ and state $s_{t + 1}$\;
+	$Q(s, a) = Q(s_t, a_t) + \alpha(R + \gamma~max_{a}Q(s_{t + 1}, a) - Q(s_t, a_t))$\;
+	Update $s_t = s_{t + 1}$
+	}
+	}
+	\caption{Tabular Q-Learning}
+\end{algorithm}

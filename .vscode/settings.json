@@ -1,4 +1,18 @@
 {
   "latex-workshop.latex.clean.subfolder.enabled": true,
-  "latex-workshop.latex.autoClean.run": "onBuilt"
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.languageContextByClass": {
+    "latex": {
+      "body": ["en"],
+      "comments": ["en"]
+    }
+  },
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext"
+  ]
 }

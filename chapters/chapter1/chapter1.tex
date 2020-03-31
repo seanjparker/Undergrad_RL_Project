@@ -1,34 +1,28 @@
 \chapter{Introduction}
 \label{cha:intro}
-
-\section{How to read this document}
-This document attempts to do two things
+My project aims to replicate some of the reinforcement learning algorithms that can be used to play classic Atari 2600 games. It also compares the results of different tests with these algorithms such as varying the hyperparameters of the network. By observing the effects on the trained agents\footnote{Agent. In our case, agent refers to a trained neural network that takes actions in a chosen environment.} when the hyperparameters are changed we can deduce a set of optimal values such that the networks can play three different Atari 2600 games. Overall, the main features of the project are the following:
 \begin{itemize}
-	\item Provide a starting point from which you can construct your
-	      report.
-	\item Explain how one or two useful \LaTeX\ tricks work.
+	\item Agents with raw pixel game data as input, outputting a set of values for the best action.
+	\item Agents attempt to find an optimal model of the environment without any prior knowledge.
+	\item Visualization of the agent ``brain'' to provide insight into what information the agents is learning.
 \end{itemize}
-This means that you actually need to read it in two ways
-\begin{itemize}
-	\item Read a printed, or previewed version to see \emph{what} can be done.
-	\item Read the source to see \emph{how} it's done.
-\end{itemize}
-If you have any comments on this document, please email \texttt{graham.gough@manchester.ac.uk}
 
-\section{Aim}
-\label{sec:aim}
+\section{Motivation}
+\label{sec:moti}
+Over the past 10 years there has been significant improvement in the RL (reinforcement learning) algorithms. One reason is that the computing power has become cheaply available by using discrete graphics cards. For example, for my project I used a Nvidia GeForce GTX 1070 that provides 1920 CUDA cores that can be used to accelerate training of neural networks. Despite this, RL algorithms are massively computationally expensive and therefore take a long time to train.
 
-The aim of the project is to create a wonderful gismo.
+Over recent years one of the pioneers in this area is DeepMind, which was acquired by Google in 2014, and they developed the DQN (deep q-network) algorithm in 2013 which they demonstrated could learn directly from the raw pixel data of games in order to achieve either human-level or super-human level performance.
 
-A blank line is used to separate paragraphs. The chapters, sections
-and subsections are numbered and added to the table of contents
-automatically.
+This research was expanded upon by DeepMind and OpenAI which is based on the original DQN by DeepMind. This research focused on trying to approximate a Q-function and thereby infer the optimal policy. On the otherhand, there has recently been a focus on other methods such as A3C/PPO which instead seek to directly optimise in the policy space of the environment.
 
-\section{Driving Latex}
+\section{Objectives}
+\label{sec:obj}
+
+\section{Report structure}
 
 \LaTeX\ is not a WYSIWYG system. You first prepare source files,
 \textsf{report.tex} etc., similar to the ones here, using your
-favourite text editor.
+favourite text editor color.
 
 The UNIX commands you need to drive \LaTeX\ are:
 \begin{enumerate}
