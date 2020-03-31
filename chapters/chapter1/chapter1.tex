@@ -8,115 +8,28 @@ My project aims to replicate some of the reinforcement learning algorithms that 
 \end{itemize}
 
 \section{Motivation}
-\label{sec:moti}
-Over the past 10 years there has been significant improvement in the RL (reinforcement learning) algorithms. One reason is that the computing power has become cheaply available by using discrete graphics cards. For example, for my project I used a Nvidia GeForce GTX 1070 that provides 1920 CUDA cores that can be used to accelerate training of neural networks. Despite this, RL algorithms are massively computationally expensive and therefore take a long time to train.
+\label{intro:sec:moti}
+Over the past 10 years there has been significant improvement in the RL (reinforcement learning) algorithms. One reason is that the computing power has become cheaply available by using discrete graphics cards. For example, for my project I used a Nvidia GeForce GTX 1070 that provides 1920 CUDA cores that can be used to accelerate training of neural networks. Despite this, RL algorithms are massively computationally expensive and hence take a long time to train.
 
 Over recent years one of the pioneers in this area is DeepMind, which was acquired by Google in 2014, and they developed the DQN (deep q-network) algorithm in 2013 which they demonstrated could learn directly from the raw pixel data of games in order to achieve either human-level or super-human level performance.
 
-This research was expanded upon by DeepMind and OpenAI which is based on the original DQN by DeepMind. This research focused on trying to approximate a Q-function and thereby infer the optimal policy. On the otherhand, there has recently been a focus on other methods such as A3C/PPO which instead seek to directly optimise in the policy space of the environment.
+This research was expanded upon by DeepMind and OpenAI which is based on the original DQN by DeepMind. This research focused on trying to approximate a Q-function and thereby infer the optimal policy. On the otherhand, there has recently been a focus on other methods such as A3C and PPO which instead seek to directly optimise in the policy space of the environment.
 
 \section{Objectives}
-\label{sec:obj}
+\label{intro:sec:obj}
+Further to what was described in section \ref{cha:intro} there was a few main objectives of the project. Firstly, I chose three games on which I decieded to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}
 
-\section{Report structure}
+TODO: include gantt chart
 
-\LaTeX\ is not a WYSIWYG system. You first prepare source files,
-\textsf{report.tex} etc., similar to the ones here, using your
-favourite text editor color.
-
-The UNIX commands you need to drive \LaTeX\ are:
-\begin{enumerate}
-	\item \texttt{latex.} Output from \texttt{latex} can be previewed on
-	      the screen with \texttt{xdvi} or \texttt{gsprev} (under X), and printed on the laserprinter using  \texttt{dvips}.
-	      \texttt{latex} produces \textsf{.dvi} files which are used by
-	      \texttt{xdvi} or \texttt{gsprev} and \texttt{dvipr}.  To get all the
-	      cross references and the table of contents correct you sometimes
-	      need to run this command twice in succession.  Keep on re-running
-	      until the advice to rerun at the end of the output goes away.
-
-	      Many people now use \texttt{pdflatex} instead of \texttt{latex} to produce \texttt{pdf} files directly.
-
-	\item \texttt{xdvi} or a pdf viewer such as \texttt{xpdf}, \texttt{evince} or \texttt{Preview} (Mac OS X). Previews the document on the
-	      screen, again the parameter is \textsf{report} (or \texttt{report.pdf}).
-
-	\item \texttt{dvips.} This is used to print dvi files on the laserprinter.  The
-	      parameter is again \texttt{report}. Most pdf previewers provide their own printing interface.
-
-	\item \texttt{xfig}. Can be used to produce diagrams, see
-	      section~\ref{sec:diagrams}.
-
-\end{enumerate}
-There are on-line manual pages for each of the commands described above.
-
-The set of files used to produce this document is in
-\textsf{/opt/info/doc/latex} (in one of the subdirectories
-\textsf{3rd-yr} or \textsf{MU-Thesis}).  They are also on the web at \url{http://studentnet.cs.manchester.ac.uk/resources/latex/MUThesis/}.
-
-You will find that for more detailed points you will need to refer to
-Lamport's `\LaTeX\ a document preparation system'~\cite{lamport}
-(Copies in the library  in Blackwell's).
-This example has been written using the most recent version of \LaTeX
-(LaTeX2e), which is described in the \emph{2nd edition} of Lamport's
-book. Buying a cheap copy of the 1st edition is probably not a good
-investment. An alternative to Lamport's book, which some people
-prefer, is `A guide to {\LaTeXe}' by Kopka and Daly~\cite{kopka}. The
-older `A guide to {\LaTeX}'~\cite{kopka-old} by the same authors is
-now obsolete. There is also plenty of support material for \LaTeX\ on the web.
-
-\section{Software Environment}
-\subsection{Occam}
-
-Here is some more example text, showing various \LaTeX\ facilities
-you may need.  The project was mostly programmed in
-\textbf{Occam}~\cite{occam}.  (A citation has been created  here to an
-entry in the bibliography at the end of the report. See
-chapter~\ref{cha:bib} for more details on how to do this).
-
-Note the way of getting boldface, \textit{textit} is used for italic.
-\emph{emph} is used for emphasis and is the same as italic except when
-already in italic.  Note the cross reference to the bibliography.
-This is how you create a footnote: DMA\footnote{Direct Memory Access.
-	Footnotes can stretch over more than one line if you have a lot to
-	say, but be careful not to overdo them.}.
-
-Here is a reference to a figure. See figure~\ref{pipeline}.
 \begin{figure}[htbp]
 	\centering
-	\input{pipeline}
-	\caption{A Pipeline of processors
-		\label{pipeline}}           %  this label must appear after the
-	%  \caption, and before the end of the
-	%  figure
+	\includegraphics[scale=0.5]{chapters/chapter1/images/atari-combined.jpg}
+	\caption{Screenshots of Pong, Breakout, Space Invaders. Left to right.
+		\label{fig:atari-screenshot}
+	}
 \end{figure}
-The picture in this figure was created the hard way using the picture
-facility of \LaTeX. It is \emph{much} easier to use \texttt{xfig}, as
-described in section~\ref{sec:diagrams}.  Whatever its contents, a
-figure `floats' to a `suitable' point in the text and is never split
-across a page boundary. (\LaTeX's idea of what constitutes a suitable
-point may not coincide with yours)
 
+\section{Report structure}
+\label{intro:sec:report_struc}
 
-Now we have a verbatim environment; this is a useful way of including
-snippits of program, printed in a fixed width font exactly as typed:
-
-\begin{verbatim}
-{{{ An example of some folds
-...  This is some folded code
-  {{{ This is another fold
-  This is text within the fold that has now been
-  opened so that the text can be read.
-  }}}
-}}}
-\end{verbatim}
-
-% Everything below here is commented material which is used by the
-% emacs tex support system called auctex. If you're not an emacs user
-% you can safely ignore it. If you do use emacs you should take a look
-% at the local emacs or LaTeX WWW pages for more on emacs support for
-% LaTeX.
-
-% Local Variables:
-% mode: latex
-% TeX-master: "report"
-% End:
-
+My report is divided into three main sections. Firstly, describing the background of the problem, then going onto giving details of my implementation and finally project evaluations/conclusions.
