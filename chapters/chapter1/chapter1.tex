@@ -1,6 +1,6 @@
 \chapter{Introduction}
 \label{cha:intro}
-My project aims to replicate some of the reinforcement learning algorithms that can be used to play classic Atari 2600 games. It also compares the results of different tests with these algorithms such as varying the hyperparameters of the network. By observing the effects on the trained agents\footnote{Agent. In our case, agent refers to a trained neural network that takes actions in a chosen environment.} when the hyperparameters are changed we can deduce a set of optimal values such that the networks can play three different Atari 2600 games. Overall, the main features of the project are the following:
+My project aims to replicate some of the reinforcement learning algorithms that can be used to play classic Atari 2600 games. It also compares the results of different tests with these algorithms such as varying the hyperparameters of the network. By observing the effects on the trained agents\footnote{Agent. In this case, agent refers to a trained neural network that takes actions in a chosen environment.} when the hyperparameters are changed we can deduce a set of optimal values such that the networks can play three different Atari 2600 games. Overall, the main features of the project are the following:
 \begin{itemize}
 	\item Agents with raw pixel game data as input, outputting a set of values for the best action.
 	\item Agents attempt to find an optimal model of the environment without any prior knowledge.
@@ -17,17 +17,20 @@ This research was expanded upon by DeepMind and OpenAI which is based on the ori
 
 \section{Objectives}
 \label{intro:sec:obj}
-Further to what was described in section \ref{cha:intro} there was a few main objectives of the project. Firstly, I chose three games on which I decieded to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}
-
-TODO: include gantt chart
+Further to what was described in section \ref{cha:intro} there was a few main objectives of the project. Firstly, I chose three games on which I decieded to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[scale=0.5]{chapters/chapter1/images/atari-combined.jpg}
-	\caption{Screenshots of Pong, Breakout, Space Invaders. Left to right.
+	\caption{Screenshots of Pong, Breakout, Space Invaders (left to right).
 		\label{fig:atari-screenshot}
 	}
 \end{figure}
+
+
+Secondly, I wanted to find a way to explore the internals of a trained agent, in order to give further insight into what the agent is trying to learn. The reason for this is a researcher could use this information to determine, for example, where the agent has learnt to focus on the frame. Additionally, it provides a insight into how to optimally tune the hyperparameters which is described in section TODO: include section.
+
+TODO: include gantt chart
 
 \section{Report structure}
 \label{intro:sec:report_struc}

@@ -44,9 +44,11 @@
 
 \def\dotitleandabstract{%
   \thispagestyle{empty}%
-  \vspace*{1.4in}
+  \vspace*{1.0in}
   \begin{center}
-    {\large {The University of Manchester\\Department of Computer Science\\Project Report \@reportyear} \\
+    {\includegraphics[scale=2.0]{./uomlogo.jpg}}\\
+    \vspace*{0.2in}
+    {\large {Department of Computer Science\\Project Report \@reportyear} \\
       \vspace*{0.2in}
       {\bf \@title} \\
       \vspace*{0.2in}
