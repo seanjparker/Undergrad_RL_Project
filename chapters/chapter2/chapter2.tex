@@ -31,12 +31,23 @@ Through the combination of these methods, it has proven to provide solutions to 
 	}
 \end{figure}
 
-Following on from Section \ref{bg:sec:rl}
+As was mentioned in Section \ref{bg:sec:rl} there has been a renewed focus on the area of DRL. This research trend originated in 2013 when DeepMind showed that using a combination of Q-Learning and deep learning, it can produce agents that can compete with expert-humans in Atari.
 
 \section{DQN on Atari 2600}
 \label{bg:sec:dqn}
-sdgsdsdfg
+As mentioned in previous sections, one of the pioneering companies in the area was DeepMind. In 2013, V.Mnih et.al. while working at DeepMind, released a paper titled ``\textit{Playing Atari with Deep Reinforcement Learning}''\cite{dqn}. This paper combined DRL, convolutional neural networks and a novel strategy called \textbf{experience replay}. DeepMind, in 2014, patented Q-Learning and it's application with deep learning on Atari games. Further, they also published further papers expanding on the idea in prestigious journals such as NIPS and Nature. Figure \ref{fig:q-learning-arch} shows the structure of a Deep Q-Network as used to play Atari 2600 games.
+
+Experience replay was an important improvement that helped in stabilising the Q-Learning algorithm. It does this by removing the correlations between a observation sequence, i.e. we don't learn from a chronological series of frames, rather we store all the experience and learn using random samples of this memory.
+
+Over the following few years, this area would see rapid progress with many different advancements by both DeepMind and OpenAI. As was noted with the introduction of Deep Q-Learning (often referred to as `\textit{Deep Q-Networks}' or \textit{DQN}) the algorithm sufferes from overestimating the value of some actions. This can lead to a poor performance on more complex Atari games such as Space Invaders. Further detailed descriptions of the Q-Learning algorithm is provided in Section \ref{dsgn:sec:qlearning}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.60\textwidth]{chapters/chapter2/images/dqn.png}
+	\caption[Deep Q-Network architcture]{Deep Q-Network architcture that from left-to-right is showing how a single frame is processed. First passing through convolutional layers, before being flattened to a single tensor which is connected to a fully connected network. This MLP acts as the Q-function approximator which will produce an output of predicted Q-values for each action.
+		\label{fig:q-learning-arch}
+	}
+\end{figure}
 
 \section{CNN Visualisation}
 \label{bg:sec:cnn-vis}
-sdfsdfsdfsdfsdf

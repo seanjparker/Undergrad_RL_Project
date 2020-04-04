@@ -19,11 +19,22 @@
     urlcolor=cyan,
 }
 
-\usepackage{pslatex} % Use Postscript fonts
+% \usepackage{pslatex} % Use Postscript fonts
 
 \usepackage[ruled]{algorithm2e}
 
+% maths definitions
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[chapter]
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+
+% maths symbols
 \usepackage{amsmath}
+\usepackage[adobe-utopia]{mathdesign}
+\let\mathcal\undefined
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
 
 %% This defines the title
 \title{Reinforcement learning for a learnable agent\\
