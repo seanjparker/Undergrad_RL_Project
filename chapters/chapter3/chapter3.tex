@@ -79,9 +79,31 @@ Once we have found the optimal action-value function we consider the MDP ``solve
 
 \section{Reinforcement learning}
 \label{dsgn:sec:rl}
+Following on from the previous section on Markov decision processes, this section decribes Reinforcement learning and how these two methods are tightly connected to each other.
+
+In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl-diagram}. The agent gets the state from the environment, using its policy, it chooses an action to take -- updating the environment. The environment then produces some new state and a reward signal which the agents uses the pick the next action.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.35\textwidth]{chapters/chapter3/images/rl.jpg}
+	\caption{Diagram of reinforcement learning
+		\label{fig:rl-diagram}
+	}
+\end{figure}
+
 
 \subsection{Exploration vs Exploitation}
 \label{dsgn:sec:rl:expt-v-explor}
+A key idea in RL is the problem of exploration vs exploration. This means that if we have an ennvironment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
+
+In this project we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability of random moves. We select random moves with a probability $\epsilon$ that is linearly decreasing over a set number of timesteps; below is the method for choosing the moves.
+
+\begin{center}
+	\begin{itemize}
+		\item Choose random action with probability $\epsilon$
+		\item With probability $1 - \epsilon$ select \vspace*{-9.25mm} action = $$\argmax_{a \in \mathcal{A}}~\hat{Q}(a)$$
+	\end{itemize}
+\end{center}
 
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
