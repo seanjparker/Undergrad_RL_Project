@@ -96,7 +96,7 @@ In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl
 \label{dsgn:sec:rl:expt-v-explor}
 A key idea in RL is the problem of exploration vs exploration. This means that if we have an ennvironment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
 
-In this project we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability of random moves. We select random moves with a probability $\epsilon$ that is linearly decreasing over a set number of timesteps; below is the method for choosing the moves.
+In this project we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability (denoted by $\epsilon$) of random actions, this is decreased over a predefined number of timesteps. Below is the method for choosing the actions.
 
 \begin{center}
 	\begin{itemize}
@@ -104,6 +104,8 @@ In this project we follow a method called $\epsilon$-greedy in which we explore 
 		\item With probability $1 - \epsilon$ select \vspace*{-9.25mm} action = $$\argmax_{a \in \mathcal{A}}~\hat{Q}(a)$$
 	\end{itemize}
 \end{center}
+
+In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and is left for future work.
 
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
