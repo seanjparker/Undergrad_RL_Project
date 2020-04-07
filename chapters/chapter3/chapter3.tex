@@ -77,6 +77,19 @@ The policy of an agent fully describes the behaviour of the agent (TODO: add ref
 
 Once we have found the optimal action-value function we consider the MDP ``solved''. Additionaly, we know that we can, given some state, take actions that will lead to the highest possible future reward.
 
+\subsection{Markov property}
+With Markov decision processes we assume that in each state, we have all the information we require in order to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as the ball has only just hit the brick.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.30\textwidth]{chapters/chapter3/images/breakout.png}
+	\caption[Screenshot of single breakout frame]{Screenshot of a breakout frame with the ball highlighted showing it just before the brick is destrotyed. The ball is highlighted using a red circle.
+		\label{fig:breakout-brick-fig}
+	}
+\end{figure}
+
+In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the ``\textit{frame-stack}''. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which has been shown, experimentally, to improve the learning of the algorithm.
+
 \section{Reinforcement learning}
 \label{dsgn:sec:rl}
 Following on from the previous section on Markov decision processes, this section decribes Reinforcement learning and how these two methods are tightly connected to each other.
@@ -105,10 +118,79 @@ In this project we follow a method called $\epsilon$-greedy in which we explore 
 	\end{itemize}
 \end{center}
 
+Although $\epsilon$-greedy is one of the simplest and a naïve method, it is suprisingly effective in exploring the environment and produces high scoring models. In fact, this method was used in the original DQN paper by V.Mnih et. al. in which they scored better than human averages in the majority of Atari 2600 games.
+
 In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and is left for future work.
 
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
+Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stoachastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled ``\textit{Learning from delayed rewards}''.
+
+We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the optimal policy $\pi$ based on the Q-values. The Q-Learning algorithm stores the state-action values in a large table of values, as represented below in Table \ref{table:design:qtable}. For each possible state that the enviroment can produce, we store a single value (Q-value) for each action that can be performed in that state. These Q-values represents the `\textit{quality}`'' of being in a state $s$ and taking action $a$.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|
+			>{\columncolor[HTML]{468291}}c |
+			>{\columncolor[HTML]{7EB1BD}}c |
+			>{\columncolor[HTML]{EFEFEF}}l |
+			>{\columncolor[HTML]{EFEFEF}}l |
+			>{\columncolor[HTML]{EFEFEF}}l |
+			>{\columncolor[HTML]{EFEFEF}}l |}
+		\hline
+		\multicolumn{2}{|l|}{\cellcolor[HTML]{EFEFEF}}                           &
+		\multicolumn{4}{c|}{\cellcolor[HTML]{4682E6}{\color[HTML]{FFFFFF} Actions}} \\ \cline{3-6}
+		\multicolumn{2}{|l|}{\multirow{-2}{*}{\cellcolor[HTML]{EFEFEF}Q-Table}}  &
+		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} NOOP}} &
+		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} FIRE}} &
+		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} LEFT}} &
+		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} RIGHT}} \\ \hline
+		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
+		{\color[HTML]{FFFFFF} 0}                                                 &
+		0                                                                        &
+		0                                                                        &
+		0                                                                        &
+		0 \\ \cline{2-6}
+		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
+		{\color[HTML]{FFFFFF} 1}                                                 &
+		-2.3452                                                                  &
+		-1.8375                                                                  &
+		-2.3634                                                                  &
+		-1.5463 \\ \cline{2-6}
+		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
+		{\color[HTML]{FFFFFF} \vdots}                                            &
+		\vdots                                                                   &
+		\vdots                                                                   &
+		\vdots                                                                   &
+		\vdots \\ \cline{2-6}
+		\multirow{-4}{*}{\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} States}}  &
+		{\color[HTML]{FFFFFF} 128}                                               &
+		2.4456                                                                   &
+		1.2345                                                                   &
+		6.3462                                                                   &
+		3.8356 \\ \hline
+	\end{tabular}
+	\caption[Q-Table Example]{Example of how state-action pairs are stored in a Q-Table (NOOP abbreviates `No action/No operation')}\label{table:design:qtable}
+\end{table}
+
+Since the Q-Learning algorithm is iterative, at each timestep, we need to update the Q-value corresponding to the occupied state and the action we took. In Chapter \ref{dsgn:sec:dql} this idea will be expanded upon, by using neural networks as a function approximator, replacing the need to store the whole table of Q-values. Algorithm \ref{algo:qlearning} shows how the algorithm is implemented in order to both, predict the next action to take, and updating the Q-table. In order to update the Q-values for each state we use the Q-value update equation which is shown below.
+
+\begin{defn}
+	$$Q(s, a) = Q(s, a) + \alpha(R + \gamma \max_a Q(s_{t+1}, a) - Q(s, a))$$
+	\begin{itemize}
+		\item $Q(s, a)$, q-value for state-action pair
+		\item $\alpha$, learning rate
+		\item $R$, immediate reward from enviroment
+		\item $\gamma$ discount factor, $\gamma\in[0,1]$
+		\item $max_a Q(s_{t + 1},~a)$, estimate of optimal future reward
+	\end{itemize}
+\end{defn}
+
+A major issue with Q-Learning is that since we perform a maximisation of all future rewards when updating the Q-values, this can lead to the algorithm over-estimating the quality of actions and slowing down the learning. During training, we use the same Q-function in order to both produce the expected maximum action-value of future rewards and, select the best possible action in the current state.
+
+\input{algorithms/qlearning.tex}
+
+As shown above, we can use Q-learning to find the optimal policy by storing all the $q_*(s, a)$ values. However, in practise we run into a issue with the size of the Q-table in that it quickly becomes too big to store in memory. This issue is especially prevalent for large MDPs such as those from Atari games due to the raw pixel input. In order to handle the high-dimensonal input from the games, we can instead use a function approximator to estimate the values of $q_*(s, a)$. This idea will be developed in Section \ref{dsgn:sec:dql} where RL is combined with Deep Learning.
 
 \section{Q-Learning improvements}
 \label{dsgn:sec:qlearning:qextra}
@@ -118,3 +200,13 @@ In the area of reinforcement learning, there are some more advanced methods such
 
 \subsection{Duelling Q-Learning}
 \label{dsgn:sec:qlearning:dueldqn}
+
+\section{Deep Learning}
+\label{dsgn:sec:dl}
+\subsection{Multi-layer perceptron (MLP)}
+\subsection{Convolutional Neural Network (CNN)}
+
+\section{Deep Q-Learning}
+\label{dsgn:sec:dql}
+
+\subsection{Experience Replay}
