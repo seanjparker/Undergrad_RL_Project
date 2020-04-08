@@ -192,21 +192,49 @@ A major issue with Q-Learning is that since we perform a maximisation of all fut
 
 As shown above, we can use Q-learning to find the optimal policy by storing all the $q_*(s, a)$ values. However, in practise we run into a issue with the size of the Q-table in that it quickly becomes too big to store in memory. This issue is especially prevalent for large MDPs such as those from Atari games due to the raw pixel input. In order to handle the high-dimensonal input from the games, we can instead use a function approximator to estimate the values of $q_*(s, a)$. This idea will be developed in Section \ref{dsgn:sec:dql} where RL is combined with Deep Learning.
 
+\section{Deep Learning}
+\label{dsgn:sec:dl}
+This section will describe the basics used in the project for Deep Learning and some of the techniques used in order to construct the Deep Q-Networks discussed in Section \ref{dsgn:sec:dql}.
+
+\subsection{Multi-layer perceptron (MLP)}
+\label{dsgn:sec:dl:mlp}
+The main technique that underpins most of the artificial neural networks (ANN) that are used today is how we combine single neurons to for networks of neurons. Figure \ref{fig:neuron} shows how we model an artificial neuron with weights and activation functions, this is supposed to loosely model how neurons work inside the brain. The input connections are acting in place of synapses which connect together to form networks.
+
+\begin{figure}[ht!]
+	\centering
+	\input{chapters/chapter3/neuron.tex}
+	\caption{Schematic the modelling of a single neuron} \label{fig:neuron}
+\end{figure}
+
+The artificial neuron takes inputs $x_1 \hdots x_n$ with corresponding weights $w_1 \hdots w_n$. Usually, the bias $b$ is stored in $w_0$ with $x_0 = 1$. During a forward pass of the network we process the input vector \textbf{x} and producing an output $y$. In the center of the figure we have a single node that represents the function to calculate $u$ which is the weighted sum of the input vector \textbf{x} and vector of weights \textbf{w}. The equation to calculate this quantity is $u = \sum_{i=0}^n w_i~x_i$.
+
+Finally, each neuron has an activation function associated, there are many possible options for these functions such as Logistic (Sigmoid), TanH and ReLU. Each of these functions defines a threshold for when the output $u$ results in a 1/0 output in $y$.
+
+\begin{figure}[ht!]
+	\centering
+	\adjustbox{scale=0.65}{
+		\input{chapters/chapter3/mlp.tex}
+	}
+	\caption{Diagram representation of MLP} \label{fig:mlp}
+\end{figure}
+
+Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hiddenn layer is connected to the output node/nodes.
+
+In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as ``\textit{fully connected}'' as every node in a layer is connected to every other node in the next layer. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
+
+\subsection{Convolutional Neural Network (CNN)}
+\label{dsgn:sec:dl:cnn}
+
+\section{Deep Q-Learning}
+\label{dsgn:sec:dql}
+\subsection{Experience Replay}
+
 \section{Q-Learning improvements}
 \label{dsgn:sec:qlearning:qextra}
+Due to the nature of how Q-learning works, it can lead to ann overestimation of the quality of some actions. Therefore, we need a way to help improve the stablity of the algorithm by reducing this overestimation. This section describes two different approaches in order to improve upon the algorithm annd reduce the maximisation bias.
 
 \subsection{Double Q-Learning}
 \label{dsgn:sec:qlearning:doubledqn}
 
 \subsection{Duelling Q-Learning}
 \label{dsgn:sec:qlearning:dueldqn}
-
-\section{Deep Learning}
-\label{dsgn:sec:dl}
-\subsection{Multi-layer perceptron (MLP)}
-\subsection{Convolutional Neural Network (CNN)}
-
-\section{Deep Q-Learning}
-\label{dsgn:sec:dql}
-
-\subsection{Experience Replay}
