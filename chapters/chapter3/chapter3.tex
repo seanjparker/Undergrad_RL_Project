@@ -104,7 +104,6 @@ In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl
 	}
 \end{figure}
 
-
 \subsection{Exploration vs Exploitation}
 \label{dsgn:sec:rl:expt-v-explor}
 A key idea in RL is the problem of exploration vs exploration. This means that if we have an ennvironment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
@@ -220,10 +219,40 @@ Finally, each neuron has an activation function associated, there are many possi
 
 Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hiddenn layer is connected to the output node/nodes.
 
-In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as ``\textit{fully connected}'' as every node in a layer is connected to every other node in the next layer. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
+In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as ``\textit{fully connected}'' as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
 
 \subsection{Convolutional Neural Network (CNN)}
 \label{dsgn:sec:dl:cnn}
+Neural networks are excellent approximators for complex functions that need to be learnt, however, when we have high-dimensonal inputs the size of the network can become too difficult to manage. An important note is that any CNN can in theory be implemented as a neural network individual neurons. However, if we take as an example a single frame from Atari which is 210 x 160 pixels each with RGB values. This results in having over 100,000 weights on just the input layers and as such, too many weights to process in an efficient manner.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{chapters/chapter3/images/cnn.png}
+	\caption{Single convolutional layer using filters
+		\label{fig:single-cnn-layer}
+	}
+\end{figure}
+
+In addition, CNNs can exploit the spatial structure of the data by using different building blocks in order to construct the network. Some of the layers help to avoid problems such as overfitting which is a key problem when training these networks. Others such as ReLU layers help reduce the training time since it simplifies the activation functions with having too much impact on the overall network accuracy. Below is a list of a the most common layers used in CNNs with a short explanation the role of each.
+
+\begin{itemize}
+	\item Dropout.
+	\item Convolutional
+	\item Pooling
+	\item ReLU
+	\item Fully-connected
+\end{itemize}
+
+By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learnt by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning. Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a hardwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing hardwritten digits from 0-9} dataset.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.65\textwidth]{chapters/chapter3/images/mnist.png}
+	\caption{Architecture of a network to predict MNIST digits
+		\label{fig:mnist-arch}
+	}
+\end{figure}
+
 
 \section{Deep Q-Learning}
 \label{dsgn:sec:dql}
