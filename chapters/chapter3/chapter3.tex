@@ -236,11 +236,10 @@ Neural networks are excellent approximators for complex functions that need to b
 In addition, CNNs can exploit the spatial structure of the data by using different building blocks in order to construct the network. Some of the layers help to avoid problems such as overfitting which is a key problem when training these networks. Others such as ReLU layers help reduce the training time since it simplifies the activation functions with having too much impact on the overall network accuracy. Below is a list of a the most common layers used in CNNs with a short explanation the role of each.
 
 \begin{itemize}
-	\item Dropout.
-	\item Convolutional
-	\item Pooling
-	\item ReLU
-	\item Fully-connected
+	\item Convolution. Layer with filters that have learnable weights. Computing output is dot product of each filter with the input.
+	\item Pooling. Layer that acts as non-linear downsampling of the input. Helps control overfitting by reducing size of network and number of learnable parameters.
+	\item ReLU. Layer which applies an activation function to the input of the layer that removes negative values from the input by setting to those values to zero. \cite{Romanuke2017} Improves speed of training the network.
+	\item Fully-connected. At the end of the network, a fully-connnected layer can be added in order to perform high-level decisions such as predicting MNIST digits. This is usually an MLP (described in Section \ref{dsgn:sec:dl:mlp}).
 \end{itemize}
 
 By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learnt by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning. Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a hardwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing hardwritten digits from 0-9} dataset.
