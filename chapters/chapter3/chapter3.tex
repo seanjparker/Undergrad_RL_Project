@@ -242,24 +242,53 @@ In addition, CNNs can exploit the spatial structure of the data by using differe
 	\item Fully-connected. At the end of the network, a fully-connnected layer can be added in order to perform high-level decisions such as predicting MNIST digits. This is usually an MLP (described in Section \ref{dsgn:sec:dl:mlp}).
 \end{itemize}
 
-By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learnt by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning. Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a hardwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing hardwritten digits from 0-9} dataset.
+By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learnt by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning.
+
+Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a hardwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing hardwritten digits from 0-9} dataset. It uses a series of convolution (CONV) and pooling (POOL) layers before connnecting to a fully-connected network (with 10 outputs) which is used to perform the final prediction of the number.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.65\textwidth]{chapters/chapter3/images/mnist.png}
+	\includegraphics[width=0.75\textwidth]{chapters/chapter3/images/mnist.png}
 	\caption{Architecture of a network to predict MNIST digits
 		\label{fig:mnist-arch}
 	}
 \end{figure}
 
-
 \section{Deep Q-Learning}
 \label{dsgn:sec:dql}
+The following sections will outline how the previous sections have laid the foundation for introducing Deep Q-Learning. It is the method by which the computer can learn to play the Atari games to human-level. It will use the information from the previous sections and also introduce some new concepts such as Experience replay which is key to the learning process.
+
+In this project we use neural networks as the function aprroximator for $Q(s, a)$, we represent this by using $\theta$ to represent the parameterisation of the Q-function, $Q(s, a; \theta)$. Referring back to Section \ref{dsgn:sec:mdp}, the aim of Q-learning is to find a function $Q(s, a; \theta)$ that closely approximated the optimal action-value function $Q_*(s, a)$.
+The \textit{value iteration} algorithm will converge to the optimal action-value function, $Q_i \rightarrow Q_*$ as $i \rightarrow \infty$ \cite{richardsutton2018}. In practise however, we need to use a function approximator as it can generalise the solution, given by $Q(s, a; \theta) \approx Q_*(s, a)$.
+
+In order to train the network, we need to define the `loss' function for the Q-function. This will allow us to update the weights of the network in the direction of the gradient, bringing the Q-function closer to $Q_*(s, a)$ with every timestep.
+
+\begin{defn}
+	The loss function of the Q-network is defined by
+	\[
+		L_i(\theta_i) = \mathbb{E}\left[(y_i - Q(s, a; \theta_i))^2\right]
+	\]
+\end{defn}
+where $y_i = \mathbb{E}\left[r + \gamma \max_{a'}Q(s', a'; \theta_{i - 1})\vert s, a\right]$ is the target value for iteration $i$ and the function $L_i(\theta_i)$ is updated at every timestep. It is also important to note that we hold the parameters of the network fixed from the previous iteration $\theta_{i - 1}$ in order to stabilize learning.
+
+By differentiating the loss function defined above, with respect to the weights of the network ($\theta$), we get the following gradient.
+
+\begin{defn}
+	\[
+		\nabla_{\theta_i} L_i(\theta_i) = \mathbb{E} \left[ \left( r + \gamma \max_{a'} Q(s', a'; \theta_{i - 1}) - Q(s, a; \theta_i)\right) \nabla_{\theta_i} Q(s, a; \theta_i) \right]
+	\]
+\end{defn}
+
+In practise, when implementing the Q-learning algorithm, it is more computationally efficient to not compute the ful expectation of the graident, rather we optimise the loss using stoachastic graident descent. This leads us onto the Deep Q-Learning algorithm which is presented below.
+
+\input{algorithms/dqn.tex}
+
 \subsection{Experience Replay}
+\label{dsgn:subsec:exp-replay}
 
 \section{Q-Learning improvements}
 \label{dsgn:sec:qlearning:qextra}
-Due to the nature of how Q-learning works, it can lead to ann overestimation of the quality of some actions. Therefore, we need a way to help improve the stablity of the algorithm by reducing this overestimation. This section describes two different approaches in order to improve upon the algorithm annd reduce the maximisation bias.
+As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can lead to ann overestimation of the quality of some actions. Therefore, we need a way to help improve the stablity of the algorithm by reducing this overestimation. This section describes two different approaches in order to improve upon the algorithm annd reduce the maximisation bias.
 
 \subsection{Double Q-Learning}
 \label{dsgn:sec:qlearning:doubledqn}

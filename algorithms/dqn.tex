@@ -1,7 +1,7 @@
 \begin{algorithm}[H]
 	\SetAlgoNoLine
 	\DontPrintSemicolon
-	Initialize replay memory $\mathcal{D}$ with maximum capacity $N$\;
+	Initialize replay memory $D$ with maximum capacity $N$\;
 	Initialize action-value function $Q$ with random weights $\theta$\;
 	Initialize \textbf{target} action-value function $\hat{Q}$ with weights $\theta_{}^{-} = \theta$\;
 	\For{timestep = 1, T}{
@@ -11,10 +11,11 @@
 	otherwise, pick $a_t = \max_{a}Q(s_t, a;~\theta)$\;
 	Take action $a_t$ and observse reward $r_t$ and state $s_{t + 1}$\;
 	$Q(s, a) = Q(s_t, a_t) + \alpha(R + \gamma~max_{a}Q(s_{t + 1}, a) - Q(s_t, a_t))$\;
-	Store tuple $(s_t, a_t, r_t, s_{t + 1})$ in $\mathcal{D}$\;
-	Randomly sample a minibatch of tuples $(s_t, a_t, r_t, s_{t + 1})$ from $\mathcal{D}$\;
+	Store tuple $(s_t, a_t, r_t, s_{t + 1})$ in $D$\;
+	Randomly sample a minibatch of tuples $(s_t, a_t, r_t, s_{t + 1})$ from $D$\;
 	Every $C$ steps copy weights $\theta_{}^{-} = \theta$
 	}
 	}
 	\caption{Deep Q-Learning with Experience replay}
+	\label{algo:dqn}
 \end{algorithm}
