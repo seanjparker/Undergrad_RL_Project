@@ -286,6 +286,21 @@ In practise, when implementing the Q-learning algorithm, it is more computationa
 \subsection{Experience Replay}
 \label{dsgn:subsec:exp-replay}
 
+One of the problems with the Q-learning algorithm is that if we try and learn from consecutative frames, the algorithm will take a long time to converge. This is due to the large correlation between consecutative frame of the Atari games. By splitting up the training samples it breaks this correlation and reduces the variance of the gradient updates.
+
+This approach is known as ``\textit{experience replay}'' \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $D$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
+
+In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$.
+
+During the Q-learning updates, we take a mini-batch of samples, $e ~ D$, randomly from the replay memory in order to perform the stoachastic gradient descent. This method comes with several benefits that are outlined below.
+
+\begin{itemize}
+	\item We randomly sample the replay memory at each step, we can reuse experience samples multiple times, providing much greater data efficiency.
+	\item As mentioned previously, there is a strong correlation between consecutative frames, experience replay provides a method to remove this correlation.
+\end{itemize}
+
+Despite the benefits that experience replay brings, this approach has limitations. The main being that each experience sample is treated with the same importance i.e. each tuple has an equal probability of being chosen in a sample $e$. Therefore, in 2015 Schaul et.al \cite{per} introduced a new method called ``Prioritized Experience Replay'' which aimed to ensure that more important experiences are replayed with a greater frequency.
+
 \section{Q-Learning improvements}
 \label{dsgn:sec:qlearning:qextra}
 As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can lead to ann overestimation of the quality of some actions. Therefore, we need a way to help improve the stablity of the algorithm by reducing this overestimation. This section describes two different approaches in order to improve upon the algorithm annd reduce the maximisation bias.
