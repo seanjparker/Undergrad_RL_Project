@@ -8,7 +8,7 @@
 	With probability $\varepsilon$ choose random action $a_t$\;
 	Else, pick $a_t = \max_{a}Q(s_t, a)$\;
 	Take action $a_t$ and observse reward $r_t$ and state $s_{t + 1}$\;
-	$Q(s, a) = Q(s_t, a_t) + \alpha(R + \gamma~max_{a}Q(s_{t + 1}, a) - Q(s_t, a_t))$\;
+	$Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha(R_t + \gamma \max_a Q(s_{t+1}, a) - Q(s_t, a_t))$\;
 	Update $s_t = s_{t + 1}$
 	}
 	}
