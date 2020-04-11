@@ -374,11 +374,11 @@ As shown above, rather than having a single fully-connnetced layer than predicts
 	Q-function combining advantage and value functions
 
 	\[
-		Q(s, a; \theta) = V(s, a; \theta) + \left( A(s, a; \theta) - \frac{1}{A} \sum_{a'\in A} A(s, a; \theta) \right)
+		Q(s, a; \theta, \alpha, \beta) = V(s, a; \theta, \beta) + \left( A(s, a; \theta, \alpha) - \frac{1}{A} \sum_{a'\in A} A(s, a; \theta, \alpha) \right)
 	\]
 \end{defn}
 
-As the above defintion shows we calculate estimates of the Q-values for each action, and choosing the best action requires finding $a_* = \argmax_{a' \in A} Q(s, a; \theta)$.
+As the above defintion shows we calculate estimates of the Q-values for each action, and choosing the best action requires finding $a_* = \argmax_{a' \in A} Q(s, a; \theta)$. $\alpha$ and $\beta$ are the parameters for the value and advantage functions respectively.
 
 In order to calculate the Q-function, it would be intuitive to perform the arithmatic sum of the value and advantage function based on Definition \ref{advantage-func}, however, using that method leads to two problems \cite{wang2015dueling}.
 
@@ -387,4 +387,4 @@ In order to calculate the Q-function, it would be intuitive to perform the arith
 	\item Naive sum of two values is `unidentifiable'. Given a Q-value, we cannot recover $V_\pi(\cdot)$ and $A_\pi(\cdot, \cdot)$ uniquely
 \end{itemize}
 
-
+This architecture has shown to achieve best in-class performance over the different methods that are described in the sections above. In addition, these methods don't have to be used in isolation, some of the methods can be combined to further improve the performance of the Deep Q-Networks. For example, this project uses a Duelling Double Q-network architecture which outperforms the basic DQN since it is much more stable and prevents the overestimation problem.
