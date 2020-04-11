@@ -3,7 +3,7 @@ This section will cover the details of the methods and algoithms that were used 
 
 Deep Q-Networks and its enhancements have the majority of focus, as it is the basis of the project. Below is a table of the different experiments and the methods that were used in order to produce the best solution for each tested environment.
 
-\begin{table}[h!]
+\begin{table}[ht!]
 	\begin{center}
 		\begin{tabular}{|c|c|c|}
 			\hline
@@ -61,9 +61,21 @@ The policy of an agent fully describes the behaviour of the agent (TODO: add ref
 \end{defn}
 
 \begin{defn}
+	\label{action-value-func}
 	The \textit{action-value} function $q_\pi(s,~a)$ is expected return starting from state $s$, taking action $a$, following policy $\pi$
 	\begin{center}
 		$q_\pi(s,~a)=\mathbb{E}_\pi[G_t~|~S_t=s,~A_t=a]$
+	\end{center}
+\end{defn}
+
+\noindent In addition to the action-value function $q_\pi(s,~a)$ we also define the state-value function for a given state $s$.
+
+\begin{defn}
+	\label{state-value-func}
+	The \textit{state-value} function $v_\pi(s,~a)$ is the expected value of a being in a given state $s$ while under a policy $\pi$
+
+	\begin{center}
+		$v_\pi(s,~a) = \mathbb{E}_{a\sim \pi(s)}\left[q_\pi(s,~a)\right]$
 	\end{center}
 \end{defn}
 
@@ -121,13 +133,15 @@ Although $\epsilon$-greedy is one of the simplest and a naïve method, it is sup
 
 In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and is left for future work.
 
+\newpage
+
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
 Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stoachastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled ``\textit{Learning from delayed rewards}''.
 
 We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the optimal policy $\pi$ based on the Q-values. The Q-Learning algorithm stores the state-action values in a large table of values, as represented below in Table \ref{table:design:qtable}. For each possible state that the enviroment can produce, we store a single value (Q-value) for each action that can be performed in that state. These Q-values represents the `\textit{quality}`'' of being in a state $s$ and taking action $a$.
 
-\begin{table}[h!]
+\begin{table}[htb!]
 	\centering
 	\begin{tabular}{|
 			>{\columncolor[HTML]{468291}}c |
@@ -143,31 +157,31 @@ We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the opt
 		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} NOOP}} &
 		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} FIRE}} &
 		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} LEFT}} &
-		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} RIGHT}} \\ \hline
+		\multicolumn{1}{c|}{\cellcolor[HTML]{7AA1E1}{\color[HTML]{FFFFFF} RIGHT}}   \\ \hline
 		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
 		{\color[HTML]{FFFFFF} 0}                                                 &
 		0                                                                        &
 		0                                                                        &
 		0                                                                        &
-		0 \\ \cline{2-6}
+		0                                                                           \\ \cline{2-6}
 		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
 		{\color[HTML]{FFFFFF} 1}                                                 &
 		-2.3452                                                                  &
 		-1.8375                                                                  &
 		-2.3634                                                                  &
-		-1.5463 \\ \cline{2-6}
+		-1.5463                                                                     \\ \cline{2-6}
 		\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} }                          &
 		{\color[HTML]{FFFFFF} \vdots}                                            &
 		\vdots                                                                   &
 		\vdots                                                                   &
 		\vdots                                                                   &
-		\vdots \\ \cline{2-6}
+		\vdots                                                                      \\ \cline{2-6}
 		\multirow{-4}{*}{\cellcolor[HTML]{468291}{\color[HTML]{FFFFFF} States}}  &
 		{\color[HTML]{FFFFFF} 128}                                               &
 		2.4456                                                                   &
 		1.2345                                                                   &
 		6.3462                                                                   &
-		3.8356 \\ \hline
+		3.8356                                                                      \\ \hline
 	\end{tabular}
 	\caption[Q-Table Example]{Example of how state-action pairs are stored in a Q-Table (NOOP abbreviates `No action/No operation')}\label{table:design:qtable}
 \end{table}
@@ -217,7 +231,7 @@ Finally, each neuron has an activation function associated, there are many possi
 	\caption{Diagram representation of MLP} \label{fig:mlp}
 \end{figure}
 
-Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hiddenn layer is connected to the output node/nodes.
+Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hidden layer is connected to the output node/nodes.
 
 In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as ``\textit{fully connected}'' as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
 
@@ -330,5 +344,47 @@ TODO
 
 \subsection{Duelling Q-Learning}
 \label{dsgn:sec:qlearning:dueldqn}
+
+This section will describe another improvement to the original Q-learning algorithm that makes changes to the underlying network architecture in order to improve approximation of $q_*(s, a)$. The architecture was first proposed by Z. Wang et al, 2015 \cite{wang2015dueling}.
+
+By using Definition \ref{action-value-func} and Definition \ref{state-value-func} we can define a quantity called the Advantage, denoted by $A_\pi(\cdot, \cdot)$.
+
+\begin{defn}
+	\label{advantage-func}
+	The \textit{advantage function} relates the Q and value functions.
+
+	\[
+		A_\pi(s,~a) = Q_\pi(s,~a) - V_\pi(s)
+	\]
+\end{defn}
+
+In order to know what quantity the advantage funnction produces, recall that the Q-function describes the quality of taking an action $a$ in state $s$, and that the value function describes how good it is to be in a state $s$. Therefore, since the advantage function subtracts the value of a function from the Q-function, it obtains a relative measure of the importance of each action $a$ in state $s$.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{chapters/chapter3/images/duelling.png}
+	\caption{Duelling Q-Network architecture
+		\label{fig:duelling-arch}
+	}
+\end{figure}
+
+As shown above, rather than having a single fully-connnetced layer than predicts a Q-value for each output (like in Section \ref{dsgn:sec:dql}), the Duelling Q-Network maintains two discrete paths. One path attempts to predict the function $V_\pi(s)$, the other predicts $A_\pi(s, a)$. Finally, these two paths are combined together to calculate $Q_\pi(s, a)$. It is important to note, this is not an extra step in the training process, rather, it is built directly into the network and calculated during a forward pass. This is represented by the green lines combining the two paths to the output layer in Figure \ref{fig:duelling-arch}.
+
+\begin{defn}
+	Q-function combining advantage and value functions
+
+	\[
+		Q(s, a; \theta) = V(s, a; \theta) + \left( A(s, a; \theta) - \frac{1}{A} \sum_{a'\in A} A(s, a; \theta) \right)
+	\]
+\end{defn}
+
+As the above defintion shows we calculate estimates of the Q-values for each action, and choosing the best action requires finding $a_* = \argmax_{a' \in A} Q(s, a; \theta)$.
+
+In order to calculate the Q-function, it would be intuitive to perform the arithmatic sum of the value and advantage function based on Definition \ref{advantage-func}, however, using that method leads to two problems \cite{wang2015dueling}.
+
+\begin{itemize}
+	\item It can be problimatic to assume the functions give good estimates of the true values, especially using parameterised versions of the functions
+	\item Naive sum of two values is `unidentifiable'. Given a Q-value, we cannot recover $V_\pi(\cdot)$ and $A_\pi(\cdot, \cdot)$ uniquely
+\end{itemize}
 
 
