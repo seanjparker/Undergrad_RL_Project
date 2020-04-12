@@ -39,7 +39,7 @@ The definition above defines a Markov decision process, which we use as a basis 
 
 Given a frame of the game $S_t$ and the set of actions we can choose from $A_t$, we are going to try and maximise our future (expected) reward using the reward function $\mathcal{R}_{S_t}^{A_t}$. We want to choose the best action $a$, that will result in the maximum future reward. It is important that we don't look at immediate rewards only, since, in Pong we don't get the point until we have hit the ball back to the other side.
 
-In order to look at future rewards, we use the discount factor $\gamma$. When $\gamma$ is close to zero, we are ``\textit{myopic}'' in our evaluation (we only look for short-term rewards). However, as $\gamma$ gets closer towards 1, we are ``\textit{far-sighted}'' in our evaluation.
+In order to look at future rewards, we use the discount factor $\gamma$. When $\gamma$ is close to zero, we are \textit{``myopic''} in our evaluation (we only look for short-term rewards). However, as $\gamma$ gets closer towards 1, we are ``\textit{far-sighted}'' in our evaluation.
 
 Overall, we need to know a strategy that provides the best action to take in a given state which maximises the expected total reward. This is called a \textit{policy}, denoted by $\pi$.
 
@@ -100,7 +100,7 @@ With Markov decision processes we assume that in each state, we have all the inf
 	}
 \end{figure}
 
-In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the ``\textit{frame-stack}''. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which has been shown, experimentally, to improve the learning of the algorithm.
+In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the \textit{``frame-stack''}. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which has been shown, experimentally, to improve the learning of the algorithm.
 
 \section{Reinforcement learning}
 \label{dsgn:sec:rl}
@@ -137,7 +137,7 @@ In the area of reinforcement learning, there are some more advanced methods such
 
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
-Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stoachastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled ``\textit{Learning from delayed rewards}''.
+Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stoachastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled \textit{``Learning from delayed rewards''}.
 
 We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the optimal policy $\pi$ based on the Q-values. The Q-Learning algorithm stores the state-action values in a large table of values, as represented below in Table \ref{table:design:qtable}. For each possible state that the enviroment can produce, we store a single value (Q-value) for each action that can be performed in that state. These Q-values represents the `\textit{quality}`'' of being in a state $s$ and taking action $a$.
 
@@ -233,7 +233,7 @@ Finally, each neuron has an activation function associated, there are many possi
 
 Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hidden layer is connected to the output node/nodes.
 
-In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as ``\textit{fully connected}'' as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
+In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as\textit{``fully-connected''} as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
 
 \subsection{Convolutional Neural Network (CNN)}
 \label{dsgn:sec:dl:cnn}
@@ -302,7 +302,7 @@ In practise, when implementing the Q-learning algorithm, it is more computationa
 
 One of the problems with the Q-learning algorithm is that if we try and learn from consecutative frames, the algorithm will take a long time to converge. This is due to the large correlation between consecutative frame of the Atari games. By splitting up the training samples it breaks this correlation and reduces the variance of the gradient updates.
 
-This approach is known as ``\textit{experience replay}'' \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $D$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
+This approach is known as \textit{``experience replay''} \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $D$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
 
 In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$.
 

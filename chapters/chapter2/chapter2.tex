@@ -5,9 +5,9 @@ This chapter will cover some of the background material required for the followi
 
 \section{Reinforcement learning}
 \label{bg:sec:rl}
-Reinforcement learning is an area of machine learning has has been under active research since the late 1980s (TODO: ref watkins phd). The first defining algorithm of RL was called \textit{`temporal-difference learning'} often referred to as TD-Learning. This algorithm learns by bootstrapping from the current value function in order iteratively converge towards a optimal policy (i.e. the agent's strategy for taking actions in the environment).
+Reinforcement learning is an area of machine learning has has been under active research since the late 1980s \cite{watkins-phd}. The first defining algorithm of RL was called \textit{`temporal-difference learning'} often referred to as TD-Learning. This algorithm learns by bootstrapping from the current value function in order iteratively converge towards a optimal policy (i.e. the agent's strategy for taking actions in the environment).
 
-Further work by R. Sutton led to the development of TD-Lambda, an algorithm that was applied to the game of Backgammon, in 1992, by Gerald Tesauro to create TD-Gammon(TODO: ref Tesauri paper). It was a computer program that was shown to compete at expert-human level. The program also found novel strategies that were either unexplored, or dismissed in error as poor strategies. This was the first example of RL aiding in discovery or reconsideration of board game strategies. This trend of RL algorithms helping to improve human play would prove to only continue with DeepMind's AlphaZero program mastering the games of Chess (beating the strongest Chess programs such as Stockfish\footnote{\href{https://stockfishchess.org}{Stockfish}. One of the strongest Chess programs based on the CCRL ratings list.}) and Go.
+Further work by R. Sutton led to the development of TD-Lambda, an algorithm that was applied to the game of Backgammon, in 1992, by Gerald Tesauro to create TD-Gammon \cite{td-gammon}. It was a computer program that was shown to compete at expert-human level. The program also found novel strategies that were either unexplored, or dismissed in error as poor strategies. This was the first example of RL aiding in discovery or reconsideration of board game strategies. This trend of RL algorithms helping to improve human play would prove to only continue with DeepMind's AlphaZero program mastering the games of Chess (beating the strongest Chess programs such as Stockfish\footnote{\href{https://stockfishchess.org}{Stockfish}. One of the strongest Chess programs based on the CCRL ratings list.}) and Go.
 
 \subsection{Deep reinforcement learning}
 \label{bg:sec:deeprl}
@@ -35,7 +35,7 @@ As was mentioned in Section \ref{bg:sec:rl} there has been a renewed focus on th
 
 \section{DQN on Atari 2600}
 \label{bg:sec:dqn}
-As mentioned in previous sections, one of the pioneering companies in the area was DeepMind. In 2013, V.Mnih et al. while working at DeepMind, released a paper titled ``\textit{Playing Atari with Deep Reinforcement Learning}''\cite{dqn}. This paper combined DRL, convolutional neural networks and a novel strategy called \textbf{experience replay}. DeepMind, in 2014, patented Q-Learning and it's application with deep learning on Atari games. Further, they also published further papers expanding on the idea in prestigious journals such as NIPS and Nature. Figure \ref{fig:q-learning-arch} shows the structure of a Deep Q-Network as used to play Atari 2600 games.
+As mentioned in previous sections, one of the pioneering companies in the area was DeepMind. In 2013, V.Mnih et al. while working at DeepMind, released a paper titled \textit{``Playing Atari with Deep Reinforcement Learning''}\cite{dqn}. This paper combined DRL, convolutional neural networks and a novel strategy called \textbf{experience replay}. DeepMind, in 2014, patented Q-Learning and it's application with deep learning on Atari games. Further, they also published further papers expanding on the idea in prestigious journals such as NIPS and Nature. Figure \ref{fig:q-learning-arch} shows the structure of a Deep Q-Network as used to play Atari 2600 games.
 
 Experience replay was an important improvement that helped in stabilising the Q-Learning algorithm. It does this by removing the correlations between a observation sequence, i.e. we don't learn from a chronological series of frames, rather we store all the experience and learn using random samples of this memory.
 
@@ -43,11 +43,30 @@ Over the following few years, this area would see rapid progress with many diffe
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.60\textwidth]{chapters/chapter2/images/dqn.png}
+	\includegraphics[width=0.75\textwidth]{chapters/chapter2/images/dqn.png}
 	\caption[Deep Q-Network architcture]{Deep Q-Network architcture that from left-to-right is showing how a single frame is processed. First passing through convolutional layers, before being flattened to a single tensor which is connected to a fully connected network. This MLP acts as the Q-function approximator which will produce an output of predicted Q-values for each action.
 		\label{fig:q-learning-arch}
 	}
 \end{figure}
 
+
+
+\newpage
+
 \section{CNN Visualisation}
 \label{bg:sec:cnn-vis}
+A common critisism of Neural Networks is that what the network learns is difficult to understand and interpret, therefore, over recent years some methods have been developed in order to visualise how the network learns. This section will describe some of the most common methods and those that produce the most visually pleasing results.
+
+There are some considerations we need to make when visualising the CNN, for example, if we include a ReLU layer, the ReLU neurons don't have a semantic meaning by themselves. On the otherhand, in the individual filters in a CONV layer, we can observe the layer activations which indicate whether or not the network is converging.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.75\textwidth]{chapters/chapter2/images/viz.png}
+	\caption[Visualisation of the filters from the first layer of a CNN used to play Pong]{Visualisation of the first CONV layer of a CNN to play Pong, there are many filters completely black, in this agent, it means the learning rate was too high. Red highlighted filters are those filters with zero activation.
+		\label{fig:cnn-viz-activ}
+	}
+\end{figure}
+
+Based on Figure \ref{fig:cnn-viz-activ}, some of the filters show zero activation which can be a symptom of a high learning rate; these are often called \textit{``dead''} filters. Also, in terms of Atari games, during training, we can see what features the network is focusing on in attempt to maximise the rewards. Based on this information, one can tune both the learning rate during fine-tuning in order to extract more performance from the model.
+
+In addition to visualising the individual layers of the CNN, there are some more advanced visualisation techniques. One of these is called t-SNE which is a dimensionality reduction algorithm for high-dimensional datasets. It has been known to continuously produce visually pleasing results and was used in some of the papers referenced during the devleopment of this project.
