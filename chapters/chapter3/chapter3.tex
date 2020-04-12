@@ -3,6 +3,7 @@ This section will cover the details of the methods and algoithms that were used 
 
 Deep Q-Networks and its enhancements have the majority of focus, as it is the basis of the project. Below is a table of the different experiments and the methods that were used in order to produce the best solution for each tested environment.
 
+TODO -- REMOVE TABLE BELOW!
 \begin{table}[ht!]
 	\begin{center}
 		\begin{tabular}{|c|c|c|}
@@ -302,11 +303,11 @@ In practise, when implementing the Q-learning algorithm, it is more computationa
 
 One of the problems with the Q-learning algorithm is that if we try and learn from consecutative frames, the algorithm will take a long time to converge. This is due to the large correlation between consecutative frame of the Atari games. By splitting up the training samples it breaks this correlation and reduces the variance of the gradient updates.
 
-This approach is known as \textit{``experience replay''} \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $D$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
+This approach is known as \textit{``experience replay''} \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $\mathcal{D}$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
 
 In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$.
 
-During the Q-learning updates, we take a mini-batch of samples, $e \sim D$, randomly from the replay memory in order to perform the stoachastic gradient descent. This method comes with several benefits that are outlined below.
+During the Q-learning updates, we take a mini-batch of samples, $e \sim \mathcal{D}$, randomly from the replay memory in order to perform the stoachastic gradient descent. This method comes with several benefits that are outlined below.
 
 \begin{itemize}
 	\item We randomly sample the replay memory at each step, we can reuse experience samples multiple times, providing much greater data efficiency.
