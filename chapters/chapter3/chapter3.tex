@@ -91,6 +91,7 @@ The policy of an agent fully describes the behaviour of the agent (TODO: add ref
 Once we have found the optimal action-value function we consider the MDP ``solved''. Additionaly, we know that we can, given some state, take actions that will lead to the highest possible future reward.
 
 \subsection{Markov property}
+\label{dsgn:sec:markov-prop}
 With Markov decision processes we assume that in each state, we have all the information we require in order to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as the ball has only just hit the brick.
 
 \begin{figure}[htbp]
