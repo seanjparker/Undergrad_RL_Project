@@ -48,6 +48,14 @@
 
 \usepackage{adjustbox}
 
+\usepackage{pythonhighlight}
+
+\usepackage[newfloat]{minted}
+\usepackage{caption}
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Source Code}
+
 %% This defines the title
 \title{Reinforcement learning for a learnable agent\\
 in classic arcade games}
