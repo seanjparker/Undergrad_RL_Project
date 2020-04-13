@@ -50,7 +50,7 @@ env.close()
 This section will provide implementation details for the agent, how it is trained and motivate the choice of the hyperparamters used during training and evaluation. The section will be split into sections, convering the different aspects of the agent, convolutional layers for handling the raw pixel input, and the fully-connected network for predicting the Q-values of each action.
 
 \subsection{CNN}
-The convolutional will be described in this section, it is also shown diagramatically in Figure \ref{fig:project-dqn}. First, from the emulator, we recieve frames with a size of 210x160 pixels. Since the project uses a GPU implementation for performing convolution, we require a square input to the network. As such, each frame is downsampled to 84x84 pixels using a function $\phi(\cdot)$ performing a bilinear interpolation.
+The convolutional network will be described in this section, it is also shown diagramatically in Figure \ref{fig:project-dqn}. First, from the emulator, we recieve frames with a size of 210x160 pixels. Since the project uses a GPU implementation for performing convolution, we require a square input to the network. As such, each frame is downsampled to 84x84 pixels using a function $\phi(\cdot)$ performing a bilinear interpolation.
 
 Next, we construct a processed frame history ($\phi(s_{t-3}), \phi(s_{t-2}), \phi(s_{t-1}), \phi(s_t)$), the past four frames are processed using the function $\phi(\cdot)$. We briefly mentioned this in Section \ref{dsgn:sec:markov-prop} in which we referred to this concept as a \textit{``frame-stack''} the past $k$ frames.
 
@@ -64,6 +64,29 @@ The first convolutional layer performs a convolution of 32 20x20 filters, each w
   }
 \end{figure}
 
+The above architecture was decided upon after reading different papers which implemented the agent. In the original DQN paper by Mnih et al. (2013) \cite{dqn} they proposed a slightly smaller network with only two convolutional layers. In papers released later, the network architecute was deepened, as deeper networks have shown to perform better in control tasks such as Atari. An additional factor to take into account was that the input image was already quite small at 84x84 pixels and as such, by using a very deep network could lead to having lots of dead filters due to the learning rate.
+
+In this project, there was much room to explore network architectures. One area which was not explored but would be promising is using pooling layers. These have been shown to increase performance with rotational/position feature extraction which would be important for some of the more complex Atari games that require fine control such as Pitfall.
+
+Overall, OpenAI was an excellent choice for this project, it provided an excellent abstraction of the environment, exposing an API that could be used as necessary. Being able to just focus on the implementation of the agent provided more research time initially, and more time for performing a variety of tests for hyperparamter choice and network architecture. The following section will focus on the details of the DQN algorithm.
+
 \subsection{DQN}
+In this section, the details on how the DQN agent was implemented, along with the hyperparamters used during training. It was the area that the most difficult to implement in this project, primarily since Q-Networks are very sensitive to hyperparamter choice and implementation. During devleopment of the project, many iterations of the algorithm were tried until a setup that evaluated well with all the games in the test setup.
+
+In the 2013 paper authored by DeepMind \cite{dqn}, they described the error function as the following. \textit{``We fixed all positive rewards to be 1 and all negative rewards to be $-1$, leaving 0 rewards unchanged.''}. It was initially difficult to interpret that this means in terms of implementing the error function, however, using the Huber Loss function on the multiplicative term when computing the gradient is a simple interpretation of the paper. The Huber loss \ref{def:huber} is used is most proven implementations of the DQN algorithm and has shown to reach a similar level of performance.
+
+\begin{defn}
+  Huber loss function.
+
+  \begin{equation}
+    L_\delta(a)=\begin{cases}
+      \frac{1}{2}a^2,                      & \text{for $\abs{a} \leq \delta$}, \\
+      \delta(\abs{a} - \frac{1}{2}\delta), & \text{otherwise}.
+    \end{cases}
+  \end{equation}
+  \label{def:huber}
+\end{defn}
+
+
 
 \section{Visualisation}
