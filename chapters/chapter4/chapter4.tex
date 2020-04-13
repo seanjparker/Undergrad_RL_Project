@@ -54,12 +54,12 @@ The convolutional will be described in this section, it is also shown diagramati
 
 Next, we construct a processed frame history ($\phi(s_{t-3}), \phi(s_{t-2}), \phi(s_{t-1}), \phi(s_t)$), the past four frames are processed using the function $\phi(\cdot)$. We briefly mentioned this in Section \ref{dsgn:sec:markov-prop} in which we referred to this concept as a \textit{``frame-stack''} the past $k$ frames.
 
-The first convolutional layer performs a convolution of 32 20x20 filters, each with a stride of 4, to the input layer. The second layer then convolves 64 9x9 filters of stride 2. Next, the third layer convolves 64 7x7 filters of stride 1, producing the final output before the fully-connected network. The output from the last layer is flattened to a vector of 3136 nodes which is fully-connected to 256 ReLU units. Finally, we have between 4 and 6 outputs (depending on the game) with contain the predicted Q-values for each action in the action space for the environment. This architecture was kept the same for all the Atari games during the evaluation of this project.
+The first convolutional layer performs a convolution of 32 20x20 filters, each with a stride of 4, to the input layer. The second layer then convolves 64 9x9 filters of stride 2. Next, the third layer convolves 64 7x7 filters of stride 1, producing the final output before the fully-connected network. The output from the last layer is flattened to a vector of 3136 nodes which is fully-connected to 256 ReLU units. Finally, we have between 4 and 6 outputs (depending on the game) with contain the predicted Q-values for each action in the action space for the environment. This architecture was kept the same for all the Atari games during the evaluation of this project \cite{dqn}.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.75\textwidth]{chapters/chapter4/images/cnn.png}
-  \caption{DQN Architecture
+  \caption{CNN Architecture
     \label{fig:project-dqn}
   }
 \end{figure}
