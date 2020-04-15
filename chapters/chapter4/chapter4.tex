@@ -87,6 +87,16 @@ In the 2013 paper authored by DeepMind \cite{dqn}, they described the error func
   \label{def:huber}
 \end{defn}
 
+Another aspect of the DQN algorithm that up to this point, we have not discussed in the report. That is of an idea of a \textit{``frame-skip''}. We have already talked about the frame-stack which is a rolling history of the past 4 frames which is used for forward passes through the network. While a frame-skip is when we take an action in the environment, then for a series of $k$ frames we perform the \texttt{NOOP} action (No operation/No action). This is very important and the frame-skip hyperparameter has been shown to be strong determining factor in the performance of algorithms when playing Atari \cite{braylan2015frame}.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{chapters/chapter4/images/frameskip.png}
+  \caption{Frameskip on Atari Breakout
+    \label{fig:frameskip}
+  }
+\end{figure}
 
-\section{Visualisation}
+Figure \ref{fig:frameskip} shows how frames are sampled using frameskips. Using a frameskip, $k = 4$, as shown in the figure, we use every fourth frame from the game. If we denote every `seen' frame (those frames without the cross) as $x_1, x_2, \hdots, x_7$ then our first input, $s_1$, to the network will be $(x_1, x_2, x_3, x_4)$ and the the following input, $s_2$, would be $(x_2, x_3, x_4, x_5)$. This is very important to note, since the states are overlapping in consecutative forward passes.
+
+% \section{Visualisation}
