@@ -73,15 +73,15 @@ Overall, OpenAI was an excellent choice for this project, it provided an excelle
 \subsection{DQN}
 In this section, the details on how the DQN agent was implemented, along with the hyperparamters used during training. It was the area that the most difficult to implement in this project, primarily since Q-Networks are very sensitive to hyperparamter choice and implementation. During devleopment of the project, many iterations of the algorithm were tried until a setup that evaluated well with all the games in the test setup.
 
-In the 2013 paper authored by DeepMind \cite{dqn}, they described the error function as the following. \textit{``We fixed all positive rewards to be 1 and all negative rewards to be $-1$, leaving 0 rewards unchanged.''}. It was initially difficult to interpret that this means in terms of implementing the error function, however, using the Huber Loss function on the multiplicative term when computing the gradient is a simple interpretation of the paper. The Huber loss \ref{def:huber} is used is most proven implementations of the DQN algorithm and has shown to reach a similar level of performance.
+In the 2013 paper authored by DeepMind \cite{dqn}, they described the error function as the following. \textit{``We fixed all positive rewards to be 1 and all negative rewards to be $-1$, leaving 0 rewards unchanged''}. It was initially difficult to interpret, nevertheless, after reading some implementations of the algorihtm and Medium articles, it was clear that one such use the Huber loss before computing the gradients for updating the network. The Huber loss \ref{def:huber} is used is most good implementations of the DQN algorithm and has shown to reach a similar level of performance.
 
 \begin{defn}
   Huber loss function.
 
   \begin{equation}
-    L_\delta(a)=\begin{cases}
-      \frac{1}{2}a^2,                      & \text{for $\abs{a} \leq \delta$}, \\
-      \delta(\abs{a} - \frac{1}{2}\delta), & \text{otherwise}.
+    L(a)=\begin{cases}
+      \frac{1}{2}a^2,          & \text{for $\abs{a} \leq 1$}, \\
+      (\abs{a} - \frac{1}{2}), & \text{otherwise}.
     \end{cases}
   \end{equation}
   \label{def:huber}
@@ -97,6 +97,25 @@ Another aspect of the DQN algorithm that up to this point, we have not discussed
   }
 \end{figure}
 
-Figure \ref{fig:frameskip} shows how frames are sampled using frameskips. Using a frameskip, $k = 4$, as shown in the figure, we use every fourth frame from the game. If we denote every `seen' frame (those frames without the cross) as $x_1, x_2, \hdots, x_7$ then our first input, $s_1$, to the network will be $(x_1, x_2, x_3, x_4)$ and the the following input, $s_2$, would be $(x_2, x_3, x_4, x_5)$. This is very important to note, since the states are overlapping in consecutative forward passes.
+Figure \ref{fig:frameskip} shows how frames are sampled using frameskips. Using a frameskip, $k = 4$, as shown in the figure, we use every fourth frame from the game. If we denote every `seen' frame (those frames without the cross) as $x_1, x_2, \hdots, x_7$ then our first input, $s_1$, to the network will be $(x_1, x_2, x_3, x_4)$ and the the following input, $s_2$, would be $(x_2, x_3, x_4, x_5)$. An important observation of this method is that the states are overlapping in consecutative forward passes. It means that we provide the informtion to the network in order to predict the movement of the ball, such that we can move the paddle under the ball in time.
 
-% \section{Visualisation}
+Another important consideration in the DQN algorithm is that of ``cold-starts''. This is when the environment is initalised and always starts from the same state. The worry with the cold starts is that the agent may not learn to look at a state and choose the optimal action, rather, it learns to cheat and learn a sequence of actions. This would lead to poor generalisation in the environment.
+
+A solution to the problem of ``cold starts'' is to take $n$ \texttt{NOOP} actions when the environment is initalised. This will put the environment in a slightly different state every time, which means that it would be more difficult for the agent to cheat in the environment by learning a set of actions from a starting state. The original DQN paper \cite{dqn} used $n = 30$ which was the value used in this project.
+
+On the otherhand, recent reviews have cast doubt over the effectiveness of the \texttt{NOOP} actions helping the problem of cold starts. One example of this was a paper by M. C. Machado et al. (2017) \cite{machado2017revisiting} which argued that the \texttt{NOOP} sequence was not as effective as previously thought. Instead, it is proposed that it would be better to instead enforce random actions to be taken while the agent is being trained. By doing this, it adds a factor of stochasticity to the environment which also prevents the cold start problem.
+
+\section{Visualisation}
+
+Another important part of this project is the CNN visualisation. It was descirbed in section \ref{bg:sec:cnn-vis} however, in this section we will go into more detail about how it was implemented. It will first descirbe the motivation behind the choice of following a client-server architecture and then show the architecture diagramatically. Additionally, it covers some of the problems that were encountered during devleopment and how they were overcome.
+
+The main consideration for this part of the project was how the model was executed, for which there was two options.
+
+\begin{itemize}
+  \item Executing the model in browser (using Tensorflow.js)
+  \item Server-client architecture, the trained model executes on the server, sending updates to client.
+\end{itemize}
+
+Firstly, since this project used Tensorflow, programmed in Python, I could have loaded the trained model in Tensorflow.js and executed the model directly in the browser. However, for this approach to be viable, I would need to have also loaded the emulator in the browser in order to generate the frames of the game, this would require more engineering work. Additionally, not all client machines would be able to handle processing forward passes of the model.
+
+Therefore, I instead decided to implement a client-server architecture using WebSockets to perform communication. The client would initiate the connection with the server and request a new environment. The server would take requests from the client for performing actions such as, running the model, performing a single step in the model; then sending the states back to the client over the socket. The main benefit of using Websockets is that it provides full-duplex communication channels over a single TCP connection, it reduces the overhead for sending messages between client and server (unlike using standard HTTP requests) and means that we can run the model at high frame rates (usually at least 30 FPS).
