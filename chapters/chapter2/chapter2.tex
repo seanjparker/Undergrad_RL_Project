@@ -1,7 +1,7 @@
 \chapter{Background}
 \label{cha:bg}
 
-This chapter will cover some of the background material required for the following sections, it will cover the history of reinforcement learning (RL) and it's evolution to the current state-of-the-art. Additionally, it will cover the related work to this project and also cover some details of the past research papers for which this project has been based upon.
+This chapter will cover some of the background material required for the following sections, it will cover the history of reinforcement learning (RL) and the fields evolution to the current state-of-the-art. Additionally, it will cover the related work to this project and also cover some details of the past research papers for which this project has been based upon.
 
 \section{Reinforcement learning}
 \label{bg:sec:rl}
@@ -69,4 +69,6 @@ There are some considerations we need to make when visualising the CNN, for exam
 
 Based on Figure \ref{fig:cnn-viz-activ}, some of the filters show zero activation which can be a symptom of a high learning rate; these are often called \textit{``dead''} filters. Also, in terms of Atari games, during training, we can see what features the network is focusing on in attempt to maximise the rewards. Based on this information, one can tune both the learning rate during fine-tuning in order to extract more performance from the model.
 
-In addition to visualising the individual layers of the CNN, there are some more advanced visualisation techniques. One of these is called t-SNE which is a dimensionality reduction algorithm for high-dimensional datasets. It has been known to continuously produce visually pleasing results and was used in some of the papers referenced during the devleopment of this project.
+In addition to visualising the individual layers of the CNN, there are some more advanced visualisation techniques. A common approach is to use Principle Component Analysis (PCA) which can be used to reduce the number of dimensions of the fully-connected layers down to 2 dimensions, showing the variance of each principal component which can allow the researcher to construct a new dataset that will improve the performance using the components with a high variance.
+
+Another, more complex algorithm is called t-SNE  \cite{vanDerMaaten2008} which is a dimensionality reduction algorithm for high-dimensional datasets. It has been known to continuously produce visually pleasing results and was used in some of the papers referenced during the development of this project.

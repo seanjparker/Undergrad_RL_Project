@@ -1,23 +1,7 @@
 \chapter{Design}
 This section will cover the details of the methods and algoithms that were used in the implementation of the project. The previous section covered the history of some of these techniques which were imperative for building the foundation of the methods described in this chapter.
 
-Deep Q-Networks and its enhancements have the majority of focus, as it is the basis of the project. Below is a table of the different experiments and the methods that were used in order to produce the best solution for each tested environment.
-
-TODO -- REMOVE TABLE BELOW!
-\begin{table}[ht!]
-	\begin{center}
-		\begin{tabular}{|c|c|c|}
-			\hline
-			Network   & Algorithm                  & Environment    \\
-			\hline
-			CNN + MLP & Q-Learning                 & Pong           \\
-			CNN + MLP & Q-Learning                 & Breakout       \\
-			CNN + MLP & Duelling Double Q-Learning & Space Invaders \\
-			\hline
-		\end{tabular}
-		\caption{Best performing method in given environment}\label{table:design:algo-experiment}
-	\end{center}
-\end{table}
+Deep Q-Networks and its enhancements have the majority of focus, as it is the basis of the project. During the development of the project, the major focus was having an understanding of both reinforcement learning mathematically, and also how it is implemented in practise. It was noted in David Silver UCL reinforcement learning lecture series \cite{davidsilver-course} that some of the requirements for policy convergance are not as strict in practise (making the actual implementation simpler).
 
 \section{Markov decision process}
 \label{dsgn:sec:mdp}
@@ -36,7 +20,7 @@ Markov decision processes are just markov reward processes with decisions, i.e. 
 	\end{itemize}
 \end{defn}
 
-The definition above defines a Markov decision process, which we use as a basis for describing the methods in reinforcement learning. In order to illustrate the idea, let us consider the game of Pong. For simplicity, assume we can encode each frame of the game into the set of states $\mathcal{S}$. In order to play the game, we need to know what the best action to take would be at each frame of the game to move the paddle under the ball, hitting the ball back and (hopefully) scoring a point.
+The definition above defines a Markov decision process, which we use as a basis for describing the methods in reinforcement learning. In order to illustrate the idea, let us consider the game of Pong. For simplicity, assume we can encode each frame of the game into the set of states $\mathcal{S}$. In order to play the game, we need to know what the best action to take would be at each frame of the game to move the paddle under the ball, hitting the ball back and possibly scoring a point.
 
 Given a frame of the game $S_t$ and the set of actions we can choose from $A_t$, we are going to try and maximise our future (expected) reward using the reward function $\mathcal{R}_{S_t}^{A_t}$. We want to choose the best action $a$, that will result in the maximum future reward. It is important that we don't look at immediate rewards only, since, in Pong we don't get the point until we have hit the ball back to the other side.
 
@@ -92,17 +76,17 @@ Once we have found the optimal action-value function we consider the MDP ``solve
 
 \subsection{Markov property}
 \label{dsgn:sec:markov-prop}
-With Markov decision processes we assume that in each state, we have all the information we require in order to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as the ball has only just hit the brick.
+With Markov decision processes we assume that in each state, we have all the information we require in order to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as it is impossible to tell if the ball is moving towards or away from the paddle.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.30\textwidth]{chapters/chapter3/images/breakout.png}
-	\caption[Screenshot of single breakout frame]{Screenshot of a breakout frame with the ball highlighted showing it just before the brick is destrotyed. The ball is highlighted using a red circle.
+	\caption[Screenshot of single breakout frame]{Screenshot of a single frame from the game Breakout
 		\label{fig:breakout-brick-fig}
 	}
 \end{figure}
 
-In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the \textit{``frame-stack''}. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which has been shown, experimentally, to improve the learning of the algorithm.
+In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the \textit{``frame-stack''}. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which then allows the network to be able to predict the path of the ball, allowing the network to make good actions leading to a higher score.
 
 \section{Reinforcement learning}
 \label{dsgn:sec:rl}
@@ -131,7 +115,7 @@ In this project we follow a method called $\epsilon$-greedy in which we explore 
 	\end{itemize}
 \end{center}
 
-Although $\epsilon$-greedy is one of the simplest and a naïve method, it is suprisingly effective in exploring the environment and produces high scoring models. In fact, this method was used in the original DQN paper by V.Mnih et al. in which they scored better than human averages in the majority of Atari 2600 games.
+Although $\epsilon$-greedy is a simple method, it is suprisingly effective in exploring the environment and produces high scoring models. In fact, this method was used in the original DQN paper by V.Mnih et al. in which they scored better than human averages in the majority of Atari 2600 games.
 
 In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and is left for future work.
 
@@ -323,6 +307,12 @@ Despite the benefits that experience replay brings, this approach has limitation
 \label{dsgn:sec:qlearning:qextra}
 As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can lead to an overestimation of the quality of some actions. Therefore, this section describes two different approaches in order to improve upon the algorithm and reduce the maximisation bias and thereby improving the stability of learning.
 
+\subsection{Fixed Q-Network}
+\label{dsgn:sec:qlearning:fixed}
+One of the problems with the original tabular Q-learning algrithm is that if we use the same neural network to pick the best action and perform our estimation of the future reward, we are chasing a constantly moving target. This would lead to unstable learning and takes a very long time for the algorithm to converge (which it may not do in this case). However, a solution to this problem is to keep a copy of the Q-network, one that ``lags'' behind the other. We call the copied network the ``fixed'' or ``frozen'' Q-network.
+
+Therefore, we maintain two networks, the ``online'' and ``fixed'' networks. Although this doubles the memory requirements to store the weights, we aren't performing backpropagation on the fixed network, we only perform forward passes, thereby we don't have the same increase inn computational requirements. This approach also introduces another hyperparameter that must be chosen, that is, how often do we update the ``fixed'' network. Experimental results have shown that the algorithm is quite resistant to changes, leading to similar performance for a range of values. For Atari, a good choice is to update the fixed network every 10000 timesteps.
+
 \subsection{Double Q-Learning}
 \label{dsgn:sec:qlearning:doubledqn}
 In the original Q-learning algorithm, experiemental results have shown that under certain conditions the algorithm tends to overestimate the quality of some actions. Therefore, in order to reduce the bias, H. V. Hasselt introduced the double Q estimator function in his 2010 paper \cite{double-ql}. It presents an off-policy reinfrocement learning algorithm where we use two Q-functions, one for the value evaluation and the other for selecting the next action.
@@ -343,8 +333,7 @@ This definition means that the estimated value of future rewards is calculated u
 
 For this project, we use double Q-learning in combination with deep learning. As proposed by H. V. Hasselt et al. (2015) \cite{deep-double-qlearning}, the original Double Q-Learning algorithm can be simpilifed to only need minor changes to the DQN algorithm in order to achieve a similar effect in reducing the overestimation.
 
-This means that rather than maintaining two different networks, use the target Q-network and fixed network in order to determine the best action to take given a state.
-TODO
+This means that rather than maintaining two different networks and performing backpropagation on both, use the target (online) Q-network and fixed network in order to determine the best action to take given a state. The fixed (or frozen) network is the network described in Section \ref{dsgn:sec:qlearning:fixed} which uses a frozen copy of the network that is only updated periodically.
 
 \subsection{Duelling Q-Learning}
 \label{dsgn:sec:qlearning:dueldqn}

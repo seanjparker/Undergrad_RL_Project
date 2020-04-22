@@ -4,7 +4,7 @@ My project aims to replicate some of the reinforcement learning algorithms that 
 \begin{itemize}
 	\item Agents with raw pixel game data as input, outputting a set of values for the best action.
 	\item Agents attempt to find an optimal model of the environment without any prior knowledge.
-	\item Visualization of the agent ``brain'' to provide insight into what information the agents is learning.
+	\item Visualization of the agents ``brain'' to provide insight into what information the agent is learning.
 \end{itemize}
 
 \section{Impact of COVID-19}
@@ -12,15 +12,15 @@ COVID-19
 
 \section{Motivation}
 \label{intro:sec:moti}
-Over the past 10 years there has been significant improvement in the RL (reinforcement learning) algorithms. One reason is that the computing power has become cheaply available by using discrete graphics cards. For example, for my project I used a Nvidia GeForce GTX 1070 that provides 1920 CUDA cores that can be used to accelerate training of neural networks. Despite this, RL algorithms are massively computationally expensive and hence take a long time to train.
+Over the past 10 years, there has been significant improvement in the RL (reinforcement learning) algorithms. One reason is that computing power has become cheaply available by using discrete graphics cards. For example, for my project, I used an Nvidia GeForce GTX 1070 that provides 1920 CUDA cores that can be used to accelerate training of neural networks. Despite this, RL algorithms are massively computationally expensive and hence take a long time to train.
 
-Over recent years one of the pioneers in this area is DeepMind, which was acquired by Google in 2014, and they developed the DQN (deep q-network) algorithm in 2013 which they demonstrated could learn directly from the raw pixel data of games in order to achieve either human-level or super-human level performance.
+Over recent years one of the pioneers in this area is DeepMind, which was acquired by Google in 2014, and they developed the DQN (deep q-network) algorithm in 2013 which they demonstrated could learn directly from the raw pixel data of games to achieve either human-level or super-human level performance.
 
-This research was expanded upon by DeepMind and OpenAI which is based on the original DQN by DeepMind. This research focused on trying to approximate a Q-function and thereby infer the optimal policy. On the otherhand, there has recently been a focus on other methods such as A3C and PPO which instead seek to directly optimise in the policy space of the environment.
+This research was expanded upon by DeepMind and OpenAI which is based on the original DQN by DeepMind. This research focused on trying to approximate a Q-function and thereby infer the optimal policy. On the other hand, there has recently been a focus on other methods such as A3C and PPO which instead seek to directly optimise in the policy space of the environment.
 
 \section{Objectives}
 \label{intro:sec:obj}
-Further to what was described in section \ref{cha:intro} there was a few main objectives of the project. Firstly, I chose three games on which I decieded to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}.
+Further to what was described in section \ref{cha:intro}, there were a few main objectives of the project. Firstly, I chose three games on which I decided to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}.
 
 \begin{figure}[htbp]
 	\centering
@@ -31,11 +31,11 @@ Further to what was described in section \ref{cha:intro} there was a few main ob
 \end{figure}
 
 
-Secondly, I wanted to find a way to explore the internals of a trained agent, in order to give further insight into what the agent is trying to learn. The reason for this is a researcher could use this information to determine, for example, where the agent has learnt to focus on the frame. Additionally, it provides a insight into how to optimally tune the hyperparameters which is described in section TODO: include section.
+Secondly, I wanted to find a way to explore the internals of a trained agent, to give further insight into what the agent is trying to learn. The reason for this is a researcher could use this information to determine, for example, where the agent has learnt to focus on the frame. Additionally, it provides an insight into how to optimally tune the hyperparameters which are described in section TODO: include section.
 
 TODO: include gantt chart
 
 \section{Report structure}
 \label{intro:sec:report_struc}
 
-My report is divided into three main sections. Firstly, describing the background of the problem, then going onto giving details of my implementation and finally project evaluations/conclusions.
+My report is divided into three main sections. First, describing the background of the problem, then going onto giving details of my implementation and finally project evaluations/conclusions.
