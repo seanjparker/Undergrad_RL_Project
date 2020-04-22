@@ -104,7 +104,7 @@ In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl
 
 \subsection{Exploration vs Exploitation}
 \label{dsgn:sec:rl:expt-v-explor}
-A key idea in RL is the problem of exploration vs exploration. This means that if we have an ennvironment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
+A key idea in RL is the problem of exploration vs exploration. This means that if we have an environment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
 
 In this project we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability (denoted by $\epsilon$) of random actions, this is decreased over a predefined number of timesteps. Below is the method for choosing the actions.
 
@@ -221,7 +221,7 @@ Finally, each neuron has an activation function associated, there are many possi
 
 Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hidden layer is connected to the output node/nodes.
 
-In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as\textit{``fully-connected''} as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrennt neural networks (RNNs) that have a small `memory' capacity due to the network structure.
+In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as\textit{``fully-connected''} as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrent neural networks (RNNs) that have a small `memory' capacity due to the network structure.
 
 \subsection{Convolutional Neural Network (CNN)}
 \label{dsgn:sec:dl:cnn}
@@ -273,7 +273,7 @@ In order to train the network, we need to define the `loss' function for the Q-f
 \end{defn}
 where $y_i = \mathbb{E}\left[r + \gamma \max_{a'}Q(s', a'; \theta_{i - 1})\vert s, a\right]$ is the target value for iteration $i$ and the function $L_i(\theta_i)$ is updated at every timestep. It is also important to note that we hold the parameters of the network fixed from the previous iteration $\theta_{i - 1}$ in order to stabilize learning.
 
-By differentiating the loss function defined above, with respect to the weights of the network ($\theta$), we get the following gradient.
+By differentiating the loss function defined above, with respect to the weights of the network (denoted by $\theta$), we get the following gradient.
 
 \begin{defn}
 	\[
@@ -311,7 +311,7 @@ As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can 
 \label{dsgn:sec:qlearning:fixed}
 One of the problems with the original tabular Q-learning algrithm is that if we use the same neural network to pick the best action and perform our estimation of the future reward, we are chasing a constantly moving target. This would lead to unstable learning and takes a very long time for the algorithm to converge (which it may not do in this case). However, a solution to this problem is to keep a copy of the Q-network, one that ``lags'' behind the other. We call the copied network the ``fixed'' or ``frozen'' Q-network.
 
-Therefore, we maintain two networks, the ``online'' and ``fixed'' networks. Although this doubles the memory requirements to store the weights, we aren't performing backpropagation on the fixed network, we only perform forward passes, thereby we don't have the same increase inn computational requirements. This approach also introduces another hyperparameter that must be chosen, that is, how often do we update the ``fixed'' network. Experimental results have shown that the algorithm is quite resistant to changes, leading to similar performance for a range of values. For Atari, a good choice is to update the fixed network every 10000 timesteps.
+Therefore, we maintain two networks, the ``online'' and ``fixed'' networks. Although this doubles the memory requirements to store the weights, we aren't performing backpropagation on the fixed network, we only perform forward passes, thereby we don't have the same increase in computational requirements. This approach also introduces another hyperparameter that must be chosen, that is, how often do we update the ``fixed'' network. Experimental results have shown that the algorithm is quite resistant to changes, leading to similar performance for a range of values. For Atari, a good choice is to update the fixed network every 10000 timesteps.
 
 \subsection{Double Q-Learning}
 \label{dsgn:sec:qlearning:doubledqn}
@@ -351,7 +351,7 @@ By using Definition \ref{action-value-func} and Definition \ref{state-value-func
 	\]
 \end{defn}
 
-In order to know what quantity the advantage funnction produces, recall that the Q-function describes the quality of taking an action $a$ in state $s$, and that the value function describes how good it is to be in a state $s$. Therefore, since the advantage function subtracts the value of a function from the Q-function, it obtains a relative measure of the importance of each action $a$ in state $s$.
+In order to know what quantity the advantage function produces, recall that the Q-function describes the quality of taking an action $a$ in state $s$, and that the value function describes how good it is to be in a state $s$. Therefore, since the advantage function subtracts the value of a function from the Q-function, it obtains a relative measure of the importance of each action $a$ in state $s$.
 
 \begin{figure}[htbp]
 	\centering

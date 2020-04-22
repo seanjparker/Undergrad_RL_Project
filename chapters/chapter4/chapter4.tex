@@ -11,7 +11,7 @@ The code listing \ref{code:basic-gym} shows the basic API used in order to step 
 
 During the experiments performed for this project, the number of timesteps was fixed, with each episode lasting a variable number of timesteps depending on the game. For example, Pong would last an average of 1000 timesteps, whereas Breakout would be around 300 timesteps. This difference was since we considered an episode finished when the agent lost a single life, not when all five lives are lost (as is the standard in the games tested in this project).
 
-During the initial prototyping phase of the project, the environments would be ran for a short time, around 100,000 timesteps, this is in comparison to the finnal evaluation in which we ran the environment for 10 million timesteps. This was primarily since after 100k steps, one could identify is the agent was beginning to improve.
+During the initial prototyping phase of the project, the environments would be ran for a short time, around 100,000 timesteps, this is in comparison to the final evaluation in which we ran the environment for 10 million timesteps. This was primarily since after 100k steps, one could identify is the agent was beginning to improve.
 
 \begin{code}
 	\captionof{listing}{Training an agent with OpenAI Gym}
@@ -132,6 +132,8 @@ Therefore, a client-server architecture was implemented instead using WebSockets
 
 
 The visualisation of the CNN also includes showing the raw filters and their activations on the site. In order to make this happen, a forward pass of the network is performed using the current state. We store the history of the pass which includes the activations of each layer of the network (and of each filter), and importantly the resulting Q-values which are used to determine the best action to take given the current state. All this information is packaged into a predefined JSON format and sent over the socket to the client. The client parses this information and draws the pre-processed frame, the filters of the selected convolutional layer and the Q-values for each action. We also plot the Q-value of the chosen action over the past 50 frames, this allows the user to see if the agent is predicting a future reward. Figure \ref{fig:q-value-plot} shows how these Q-values are plotted, we see a slow rise, showing the agent is confident in the series of actions and then a sharp drop when the agent recieved the reward.
+
+In Figure \ref{fig:q-value-plot}, the first screenshot show the ball moving upwards towards the row of bricks. At this point the network is confident in the series of actions and it is expecting a reward (show by point A in the plot). The second screenshot shows the ball has just broken a brick, at this point the agent recieves the reward and the Q value has a sudden and sharp drop (shown by point B). Finally, point C shows that the Q-value has dropped down to its original value (corresponding to the third screenshot as the ball is travelling down to the paddle). This shows that the agent can learn to predict a complex series of events.
 
 
 \begin{figure}[htbp]
