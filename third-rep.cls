@@ -58,7 +58,6 @@
   \end{center}
   \begin{abstract}
     \normalsize
-    \setlength{\parindent}{0pt}
     \input \@abstractfile \relax
   \end{abstract}
   \ifthanks@{
