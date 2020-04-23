@@ -57,18 +57,9 @@
       Supervisor: \@supervisor}
   \end{center}
   \begin{abstract}
-    \begin{center}
-      \large
-      \@title \\
-      \vspace*{0.2in}
-      Author: \@author
-    \end{center}
     \normalsize
     \setlength{\parindent}{0pt}
     \input \@abstractfile \relax
-    \begin{center}
-      \large Supervisor: \@supervisor
-    \end{center}
   \end{abstract}
   \ifthanks@{
     \clearpage
