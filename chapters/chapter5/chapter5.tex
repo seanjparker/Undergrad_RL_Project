@@ -1,7 +1,36 @@
 \chapter{Experiments}
+This chapter will experiments that were performed to determine the performance of all the different algorithms, DQN, Double DQN and Duelling DQN. The three different environments are the three Atari games we have discussed before, that is, Pong, Breakout and Space Invaders. Each of the environments provides a different challenge, especially Space Invaders which proposed a unique challenge. This chapter also contains an analysis of the reasons why some of these methods are better performing than others which follows from the discussion in Section \ref{dsgn:sec:qlearning:qextra}.
+
+\section{Atari Network}
+This section will describe the choice of hyperparameters during training and additionaly motivate the choices to some of the hyperparameters that were chosen for the evaluation of the algorithms. The network architecture was descirbed completely in Section \ref{imple:cnn} and is also provided in a table in the table \ref{table:network-arch}. This architecture of the agent was used during the training of all the agents for all environments.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|}
+    \hline
+    Layer   & Input    & Filter Size & \# Filters & Stride & Activation function & Output   \\ \hline
+    conv\_1 & 4x84x84  & 20x20       & 32         & 4      & ReLU                & 32x20x20 \\
+    conv\_2 & 32x20x20 & 9x9         & 64         & 2      & ReLU                & 64x9x9   \\
+    conv\_3 & 64x9x9   & 7x7         & 64         & 1      & ReLU                & 64x7x7   \\
+    fc\_1   & 64x7x7   & -           & -          & -      & ReLU                & 256      \\
+    fc\_2   & 256      & -           & -          & -      & ReLU                & 4        \\ \hline
+  \end{tabular}
+  \caption{Table of the network architecture
+    \label{table:network-arch}
+  }
+\end{table}
+
+As has been noted previously, the output of the network is sometimes dependent on the game that is currently being trained. The final output varies between 4 and 6 nodes. Addition, the hyperparameters used for all the experiments in the following sections is provided in Appendix (TODO). The only difference was in Space Invaders where the frameskip hyperparameter was set as $k = 3$ instead of the standard $k = 4$ as is used in Pong and Breakout.
 
 \section{Pong}
-hi \cite{davidsilver-course}
+Pong is the first environment which this project was trained using, it is by far the simplest of environments in the Atari 2600 series and provides an excellent testbed for RL algorithms. Due to the simplicity of the game, modern RL methods allows the algorithms to converge to an optimal strategy very quickly, therefore, it is easy to tell if an approach is viable or the implementation contains bugs that affect the performance of the agent.
+
+During the training phase of Pong, it was tested using two methods, that is, DQN and a combination of Duelling-Double DQN. The major reason for combining the two methods (Double and Duelling DQN) is that when used individually, both methods achieve a very similar level of performance, hence, we can produce more interesting results by combining the two methods.
+
+The agent was allowed to play a maximum of 10 million frames of Pong (Pong converges quickly and as such it doesn't need the 20 million frames that other games like Breakout and Space Invaders need) which results in approximately (TODO) episodes\footnote{An episode is considered complete when the agent loses a life.}.
+
 \section{Breakout}
 
 \section{Space Invaders}
+
+\section{Visualisation}

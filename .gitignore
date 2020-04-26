@@ -3,3 +3,4 @@ output
 __latexindent_temp.tex
 *.synctex.gz
 _minted-report/
+*.loa

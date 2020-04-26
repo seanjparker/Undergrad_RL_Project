@@ -50,6 +50,7 @@ env.close()
 This section will provide implementation details for the agent, how it is trained and motivate the choice of the hyperparamters used during training and evaluation. The section will be split into sections, convering the different aspects of the agent, convolutional layers for handling the raw pixel input, and the fully-connected network for predicting the Q-values of each action.
 
 \subsection{CNN}
+\label{imple:cnn}
 The convolutional network will be described in this section, it is also shown diagramatically in Figure \ref{fig:project-dqn}. First, from the emulator, we recieve frames with a size of 210x160 pixels. Since the project uses a GPU implementation for performing convolution, we require a square input to the network. As such, each frame is downsampled to 84x84 pixels using a function $\phi(\cdot)$ performing a bilinear interpolation.
 
 Next, we construct a processed frame history ($\phi(s_{t-3}), \phi(s_{t-2}), \phi(s_{t-1}), \phi(s_t)$), the past four frames are processed using the function $\phi(\cdot)$. We briefly mentioned this in Section \ref{dsgn:sec:markov-prop} in which we referred to this concept as a \textit{``frame-stack''} the past $k$ frames.

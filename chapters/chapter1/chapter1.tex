@@ -1,14 +1,17 @@
 \chapter{Introduction}
 \label{cha:intro}
-My project aims to replicate some of the reinforcement learning algorithms that can be used to play classic Atari 2600 games. It also compares the results of different tests with these algorithms such as varying the hyperparameters of the network. By observing the effects on the trained agents\footnote{Agent. In this case, agent refers to a trained neural network that takes actions in a chosen environment.} when the hyperparameters are changed we can deduce a set of optimal values such that the networks can play three different Atari 2600 games. Overall, the main features of the project are the following:
+My project aims to implemented and compare some of the reinforcement learning algorithms that have been used to play classic Atari 2600 games. It also compares the results of different tests with these algorithms such as varying the hyperparameters of the network. By observing the effects on the trained agents\footnote{Agent. In this case, agent refers to a trained neural network that takes actions in a chosen environment.} when the hyperparameters are changed we can deduce a set of optimal values such that the networks can play three different Atari 2600 games. Overall, the main features of the project are the following:
 \begin{itemize}
-	\item Agents with raw pixel game data as input, outputting a set of values for the best action.
-	\item Agents attempt to find an optimal model of the environment without any prior knowledge.
-	\item Visualization of the agents ``brain'' to provide insight into what information the agent is learning.
+  \item Agents with raw pixel data as input, outputting a set of values for the best action.
+  \item Agents attempt to find an optimal model of the environment without any prior knowledge.
+  \item Visualization of the agents ``brain'' to provide insight into what information the agent is learning.
 \end{itemize}
 
-\section{Impact of COVID-19}
-COVID-19 has caused widespread disruption across the faculty and University as a whole, and unfortunately it also impacted my plans for the Semester. The circumstances surrounding the pandemic lead to uncertainty around whether it was safe to be at University and made it more difficult to maintain the required level of focus and motivation on the project, mainly as I was concered about if I should travel home or have the possibility of being quarentined in University accomodation. On the otherhand, I know that many people were more affected than I, in compaision my situation was much less disrupted than others.
+In relation to the first point above, there are two ways in which you can provide inputs to agents that play games. The first (and often simplest) option is by using values from specific locations in RAM\footnote{In this case, RAM refers specifically to the in-game memory.}. If we take the game Pong as example, we could take information such as the enemy paddle y-position, the ball x,y-position, the players paddle y-position and finally the score. By having this information without any processing required, it helps to reduce the state space.
+
+On the otherhand, another option is to take as input the raw pixels from the game, it makes it more difficult to play the game as we need to interpret the pixels to deduce all the information make optimal moves. This is the approach we take as it more closely simulates how a human player would observe information from the game. Additionally, this project also aims to implement a variety of methods which are described in \ref{dsgn:sec:qlearning} and \ref{dsgn:sec:qlearning:qextra}; the simplest of which is a method called Q-Learning and then further improvements to the Q-Learning called Double Q-Learning and Duelling Q-Learning.
+
+Finally, this project describes methods by which it is possible to visualise the agents ``brain'', there has been much research in recent years into methods to visualise high-dimensional data when investigating neural network and this project explores and implements one such method that will visualise what information the agent has learnt about the environment.
 
 \section{Motivation}
 \label{intro:sec:moti}
@@ -23,17 +26,19 @@ This research was expanded upon by DeepMind and OpenAI which is based on the ori
 Further to what was described in section \ref{cha:intro}, there were a few main objectives of the project. Firstly, I chose three games on which I decided to train the agents, Pong, Breakout, and Space Invaders which are shown below in Figure \ref{fig:atari-screenshot}.
 
 \begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.7\textwidth]{chapters/chapter1/images/atari-combined.jpg}
-	\caption{Screenshots of Pong, Breakout, Space Invaders (left to right).
-		\label{fig:atari-screenshot}
-	}
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapters/chapter1/images/atari-combined.jpg}
+  \caption{Screenshots of Pong, Breakout, Space Invaders (left to right).
+    \label{fig:atari-screenshot}
+  }
 \end{figure}
 
-
-Secondly, I wanted to find a way to explore the internals of a trained agent, to give further insight into what the agent is trying to learn. The reason for this is a researcher could use this information to determine, for example, where the agent has learnt to focus on the frame based on the filter activation maps. Additionally, it also can point towards poor hyperparameter choice such as a high learning rate when the layers have many dead filters. More discussion of these techniques are described in Section \ref{bg:sec:cnn-vis}.
+Secondly, having a method to explore the internals of a trained agent can provide further insight into what the agent is trying to learn. A major benefit for this approach is that a researcher could use this information to determine, for example, where the agent has learnt to focus on the frame based on the filter activation maps. Additionally, it also can point towards poor hyperparameter choice such as a high learning rate when the layers have many dead filters. More discussion of these techniques is provided in Section \ref{bg:sec:cnn-vis}.
 
 \section{Report structure}
 \label{intro:sec:report_struc}
 
-My report is divided into three main sections. First, describing the background of the problem, then going onto giving details of my implementation and finally project evaluations/conclusions.
+This report is divided into three main sections. First, describing the background of the problem and the history of the methods/techniques that underpin reinforcement learning and neural networks. Further, a section providing detailed discussion of the project design and motivating the choice of some of the decisions made in this project. After that, a section discussing the implementation of the project and system design. Penultimately, we will discuss the evaluation of the project with a comparison of the different techniques and critical analysis. Finally, this report ends with a personal reflection on this project.
+
+\section{Impact of COVID-19}
+COVID-19 has caused widespread disruption across the faculty and University as a whole, and unfortunately it also impacted my plans for the Semester. The circumstances surrounding the pandemic lead to uncertainty around whether it was safe to be at University and made it more difficult to maintain the required level of focus and motivation on the project, mainly as I was concered about if I should travel home or have the possibility of being quarentined in University accomodation. On the otherhand, I know that many people were more affected than I, in compaision my situation was much less disrupted than others.
