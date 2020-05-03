@@ -20,7 +20,7 @@ This section will describe the choice of hyperparameters during training and add
   }
 \end{table}
 
-As has been noted previously, the output of the network is sometimes dependent on the game that is currently being trained. The final output varies between 4 and 6 nodes. Addition, the hyperparameters used for all the experiments in the following sections is provided in Appendix (TODO). The only difference was in Space Invaders where the frameskip hyperparameter was set as $k = 3$ instead of the standard $k = 4$ as is used in Pong and Breakout.
+As has been noted previously, the output of the network is sometimes dependent on the game that is currently being trained. The final output varies between 4 and 6 nodes. Addition, the hyperparameters used for all the experiments in the following sections is provided in Appendix \ref{appen:train}. The only difference was in Space Invaders where the frameskip hyperparameter was set as $k = 3$ instead of the standard $k = 4$ as is used in Pong and Breakout.
 
 \subsection{Pong}
 Pong is the first environment which this project was trained using, it is by far the simplest of environments in the Atari 2600 series and provides an excellent testbed for RL algorithms. Due to the simplicity of the game, modern RL methods allows the algorithms to converge to an optimal strategy very quickly, therefore, it is easy to tell if an approach is viable or the implementation contains bugs that affect the performance of the agent.
@@ -35,6 +35,37 @@ Breakout was the second of the three environments uponn which the agent was trai
 Figure (TODO) shows the results of training the agent of 20 million timesteps and the average reward achieved over every (TODO) timesteps. The (TODO) line shows the results for training the DQN, Double DQN and Double-Duelling DQN in (TODO) respecitvely. We can clearly observe that the DQN algorithm is the worst performing with the duelling-double DQN having the most stable and best performance. We also observe the same results during evaluation of the agent over 1000 episodes as shown in Figure (TODO).
 
 \subsection{Space Invaders}
+Space Invaders was the final and most difficult environment that the algorithms were trained upon. It presented some challenges during training, one notable challenge was that the \textit{``frameskip''} hyperparameter could not be kept at the value of $k = 4$ like was used in the previous two environments. In the Atari Space Invaders the players bullets flashed off every four frames. This meant that everytime the frame was sampled, we always missed the player bullet and therefore the agent would of needed to learn to play without the all the information about the players bullets. Therefore, for Space Invaders we changed to a frameskip of $k = 3$.
+
+Figure \ref{fig:si-train-results} shows the results of the training the agent over a period of 20 million timesteps. We can observe from the training results that the Duelling DQN performed the best by the end of training, although the training was more gradual as compared to the original and double DQN algorithms. We can conclude from the training results that the Duelling DQN, although it is slower to train (due to a more complex network architecture), it performs better than other methods and is more stable. We see more variance in the training results for the DQN algorithm especially after 5 million frames; a further investigation could be to implement a learning rate schedule which would reduce the learning rate after 5 million frames and observe if it results in more stability.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=1.0\textwidth]{chapters/chapter5/images/si_plot.jpg}
+  \caption[Space Invaders training result plot]{Space Invaders training result. The results are shown for training on the three different algorithms which can be seen in the legend. The highest performing is the Duelling DQN network, outperforming double and original DQN. The graph is generated using the training data where the reward is averaged using an exponential moving average with a span of 200 (we have a decay based on the previous 200 data points).
+    \label{fig:si-train-results}
+  }
+\end{figure}
+
+\subsection{Testing}
+
+The sections above show the results after testing the three algorithms on three different environments and how the different methods compare. We can additionally show how well the agents perform after training compared to the human average. Since one of the aims of this project was to produce an agent that can play Atari games to human-level we show in this section that this objective has been achieved in general. The human average scores in Table \ref{table:eval:testing-results} were taken from the paper ``Playing Atari with Deep Reinforcement Learning'' (2013) by Mnih et al. The human scores were calculated as an average of humans playing the games in the emulator with only 30 minutes of time to get used to the emulator.
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{c|c|c|c|}
+    \cline{2-4}
+    \multicolumn{1}{l|}{}               & Pong        & Breakout      & Space Invaders \\ \hline
+    \multicolumn{1}{|c|}{Random}        & -20.4       & 1.2           & 179            \\ \hline
+    \multicolumn{1}{|c|}{Human Average} & -3          & 31            & \textbf{3690}  \\ \hline
+    \multicolumn{1}{|c|}{DQN}           & 20          & 135           & 970            \\ \hline
+    \multicolumn{1}{|c|}{Double DQN}    & 21          & TODO          & TODO           \\ \hline
+    \multicolumn{1}{|c|}{Duelling DQN}  & \textbf{21} & 364 & 1120           \\ \hline
+  \end{tabular}
+  \caption[Testing results for Original/Double/Duelling DQN]{Testing results from the three different algorithms, original, double and duelling DQN. The highest score in each category is shown in \textbf{bold}. We achieve the highest score in both Pong and Brakout. However, in Space Invaders we don't beat the average human; with more training time this outcome may be different.}\label{table:eval:testing-results}
+\end{table}
+
+The results in Table \ref{table:eval:testing-results} shows that we have produced a learnable agent that can play two of the three environments to super-human level and a third to a reasonable level compared to humans. With more training time this gap could have been reduced since Figure \ref{fig:si-train-results} shows an increasing linear trend in the average reward during training.
 
 
 \section{Visualisation}

@@ -1,40 +1,16 @@
-\chapter{Example of operation}
+\chapter{Hyperparameters during training}
+\label{appen:train}
 
-An appendix is just like any other chapter, except that it comes after
-the appendix command in the master file.
-
-One use of an appendix is to include an example of input to the system
-and the corresponding output.
-
-One way to do this is to include, unformatted, an existing input file. 
-You can do this using \verb=\verbatiminput=. In this appendix we
-include a copy of the C file \textsf{hello.c} and its output file
-\textsf{hello.out}. If you use this facility you should make sure that
-the file which you input does not contain \texttt{TAB} characters,
-since \LaTeX\ treats each \texttt{TAB} as a single space; you can use
-the Unix command \texttt{expand} (see manual page) to expand tabs into
-the appropriate number of spaces. 
-
-\section{Example input and output}
-\label{sec:inp-eg}
-\subsection{Input}
-\label{sec:input}
-(Actually, this isn't input, it's the source code, but it will do as
-an example)
-
-\verbatiminput{hello.c}
-
-\subsection{Output}
-\label{sec:output}
-
-\verbatiminput{hello.out}
-\subsection{Another way to include code}
-You can also use the capabilities of the \texttt{listings} package to
-include sections of code, it does some keyword highlighting.
-
-%\lstinputlisting[language=C]{hello.c}
-
-% Local Variables: 
-% mode: latex
-% TeX-master: "report"
-% End: 
+\begin{itemize}
+  \item Timesteps -- $2 \times 10^{7}$
+  \item Learning rate -- $1 \times 10^{-4}$
+  \item Experience replay buffer size -- $100000$
+  \item $\epsilon$-greedy starting value -- 1.0
+  \item $\epsilon$-greedy final value -- 0.01
+  \item Frameskip -- 4
+  \item Learning starts -- 10000
+  \item Target network update frequency -- 1000
+  \item $\gamma$ -- 0.99
+  \item Batch size -- 32
+  \item No-op frames (start of episode) -- 30
+\end{itemize}
