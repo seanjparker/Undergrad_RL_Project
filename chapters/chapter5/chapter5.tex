@@ -30,7 +30,7 @@ During the training phase of Pong, it was tested using two methods, that is, DQN
 The agent was allowed to play a maximum of 10 million frames of Pong (Pong converges quickly, therefore it doesn't need the 20 million frames that other games like Breakout and Space Invaders require). Additionally, due to the limited compute power available to this project, a single Nvidia GTX 1070, training the agent for 20 million frames takes just over 24 hours. Therefore, the number of opportunities to perform  which results in approximately (TODO) episodes\footnote{An episode is considered complete when the agent loses a life.}. Figure (TODO) shows the results during training of the agent, as can be observed, Pong results in a convergance plot for both the methods described above. In this game, neither method outperforms the other as both algorithms converge to the optimal score of $+21$.
 
 \subsection{Breakout}
-Breakout was the second of the three environments uponn which the agent was trained. We used the same network architecture as we did for Pong and the hyperparameters were the same during training with the exception of the number of timesteps for which the agent was trained. In Pong we used 10 million timesteps, however, since Breakout is more complex, it required 20 million timesteps in order to show a trend in the data that the agent is indeed improving over time. It should be noted that in the majority of papers that are referenced in this project it is common to use 100 million timesteps when training on Atari; it would not be feasible to train the agent for this number of timesteps on the hardware used for training as this would take over 5 days for a single algorithm on the environment.
+Breakout was the second of the three environments upon which the agent was trained. We used the same network architecture as we did for Pong and the hyperparameters were the same during training with the exception of the number of timesteps for which the agent was trained. In Pong we used 10 million timesteps, however, since Breakout is more complex, it required 20 million timesteps in order to show a trend in the data that the agent is indeed improving over time. It should be noted that in the majority of papers that are referenced in this project it is common to use 100 million timesteps when training on Atari; it would not be feasible to train the agent for this number of timesteps on the hardware used for training as this would take over 5 days for a single algorithm on the environment.
 
 Figure (TODO) shows the results of training the agent of 20 million timesteps and the average reward achieved over every (TODO) timesteps. The (TODO) line shows the results for training the DQN, Double DQN and Double-Duelling DQN in (TODO) respecitvely. We can clearly observe that the DQN algorithm is the worst performing with the duelling-double DQN having the most stable and best performance. We also observe the same results during evaluation of the agent over 1000 episodes as shown in Figure (TODO).
 
@@ -55,12 +55,12 @@ The sections above show the results after testing the three algorithms on three 
   \centering
   \begin{tabular}{c|c|c|c|}
     \cline{2-4}
-    \multicolumn{1}{l|}{}               & Pong        & Breakout      & Space Invaders \\ \hline
-    \multicolumn{1}{|c|}{Random}        & -20.4       & 1.2           & 179            \\ \hline
-    \multicolumn{1}{|c|}{Human Average} & -3          & 31            & \textbf{3690}  \\ \hline
-    \multicolumn{1}{|c|}{DQN}           & 20          & 135           & 970            \\ \hline
-    \multicolumn{1}{|c|}{Double DQN}    & 21          & TODO          & TODO           \\ \hline
-    \multicolumn{1}{|c|}{Duelling DQN}  & \textbf{21} & 364 & 1120           \\ \hline
+    \multicolumn{1}{l|}{}               & Pong        & Breakout     & Space Invaders \\ \hline
+    \multicolumn{1}{|c|}{Random}        & -20.4       & 1.2          & 179            \\ \hline
+    \multicolumn{1}{|c|}{Human Average} & -3          & 31           & \textbf{3690}  \\ \hline
+    \multicolumn{1}{|c|}{DQN}           & 20          & 135          & 970            \\ \hline
+    \multicolumn{1}{|c|}{Double DQN}    & 21          & TODO         & TODO           \\ \hline
+    \multicolumn{1}{|c|}{Duelling DQN}  & \textbf{21} & \textbf{364} & 1120           \\ \hline
   \end{tabular}
   \caption[Testing results for Original/Double/Duelling DQN]{Testing results from the three different algorithms, original, double and duelling DQN. The highest score in each category is shown in \textbf{bold}. We achieve the highest score in both Pong and Brakout. However, in Space Invaders we don't beat the average human; with more training time this outcome may be different.}\label{table:eval:testing-results}
 \end{table}
@@ -69,4 +69,5 @@ The results in Table \ref{table:eval:testing-results} shows that we have produce
 
 
 \section{Visualisation}
-In order to evaluate the visualisation of the neural network, we can do this by first, checking that the layers of the network are as we expect. Secondly, we check that the Q-function visualisation plots the shape which we expect it to look like based upon both previous research and the theory of Q-Learning.
+In order to evaluate the visualisation of the neural network, we can do this by first, checking that the layers of the network are visible and we can observe changes in the activation of the filters to correspond with input image. Secondly, we check that the Q-function visualisation plots the shape which we expect it to look like based upon both previous research and the theory of Q-Learning.
+
