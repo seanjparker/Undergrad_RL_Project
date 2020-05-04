@@ -35,7 +35,7 @@ Overall, we need to know a strategy that provides the best action to take in a g
 	\end{center}
 \end{defn}
 
-The policy of an agent fully describes the behaviour of the agent (TODO: add ref) which only depends on the current state, not the history. In order to describe the optimal policy for an agent to follow, we first need some more definitions.
+The policy of an agent fully describes the behaviour of the agent \cite{davidsilver-course} which only depends on the current state, not the history. In order to describe the optimal policy for an agent to follow, we first need some more definitions.
 
 \begin{defn}
 	$G_t$ is the total discounted reward for time-step $t$
@@ -292,7 +292,7 @@ One of the problems with the Q-learning algorithm is that if we try and learn fr
 
 This approach is known as \textit{``experience replay''} \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $\mathcal{D}$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
 
-In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$.
+In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$. More detail on the implementation of this method is provided in \ref{imple:dqn}.
 
 During the Q-learning updates, we take a mini-batch of samples, $e \sim \mathcal{D}$, randomly from the replay memory in order to perform the stoachastic gradient descent. This method comes with several benefits that are outlined below.
 
@@ -380,4 +380,4 @@ In order to calculate the Q-function, it would be intuitive to perform the arith
 	\item Naive sum of two values is `unidentifiable'. Given a Q-value, we cannot recover $V_\pi(\cdot)$ and $A_\pi(\cdot, \cdot)$ uniquely
 \end{itemize}
 
-This architecture has shown to achieve best in-class performance over the different methods that are described in the sections above. In addition, these methods don't have to be used in isolation, some of the methods can be combined to further improve the performance of the Deep Q-Networks. For example, this project uses a Duelling Double Q-network architecture which outperforms the basic DQN since it is much more stable and prevents the overestimation problem.
+This architecture has shown to achieve best in-class performance over the different methods that are described in the sections above. In addition, these methods don't have to be used in isolation, some of the methods can be combined to further improve the performance of the Deep Q-Networks. For example, this investigates both the Double Q-network and Duelling Q-network architectures which both outperform the basic DQN since the methods are much more stable by prevnting the overestimation problem.

@@ -25,14 +25,30 @@ As has been noted previously, the output of the network is sometimes dependent o
 \subsection{Pong}
 Pong is the first environment which this project was trained using, it is by far the simplest of environments in the Atari 2600 series and provides an excellent testbed for RL algorithms. Due to the simplicity of the game, modern RL methods allows the algorithms to converge to an optimal strategy very quickly, therefore, it is easy to tell if an approach is viable or the implementation contains bugs that affect the performance of the agent.
 
-During the training phase of Pong, it was tested using two methods, that is, DQN and a combination of Duelling-Double DQN. The major reason for combining the two methods (Double and Duelling DQN) is that when used individually, both methods achieve a very similar level of performance, hence, we can produce more interesting results by combining the two methods.
+During the training phase of Pong, it was tested using three methods, that is, DQN, Double and Duelling DQN.
 
-The agent was allowed to play a maximum of 10 million frames of Pong (Pong converges quickly, therefore it doesn't need the 20 million frames that other games like Breakout and Space Invaders require). Additionally, due to the limited compute power available to this project, a single Nvidia GTX 1070, training the agent for 20 million frames takes just over 24 hours. Therefore, the number of opportunities to perform  which results in approximately (TODO) episodes\footnote{An episode is considered complete when the agent loses a life.}. Figure (TODO) shows the results during training of the agent, as can be observed, Pong results in a convergance plot for both the methods described above. In this game, neither method outperforms the other as both algorithms converge to the optimal score of $+21$.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{chapters/chapter5/images/pong_plot.jpg}
+  \caption[Pong Training results]{
+    \label{fig:pong-train-results}
+  }
+\end{figure}
+
+The agent was allowed to play a maximum of 10 million frames of Pong (Pong converges quickly, therefore it doesn't need the 20 million frames that other games like Breakout and Space Invaders require). Additionally, due to the limited compute power available to this project, a single Nvidia GTX 1070, training the agent for 20 million frames takes just over 24 hours. Therefore, the number of opportunities to perform  which results in approximately 6000 episodes\footnote{An episode is considered complete when the agent loses a life.}. Figure \ref{fig:pong-train-results} shows the results during training of the agent. This plot shows that all three algorithms result in a convergance plot reaching the threshold for the maximum score after less than 5 million frames. In this environment, non of the methods can be said to outperform the others, all the algorithms eventually converge to the best possible score of $+21$.
 
 \subsection{Breakout}
 Breakout was the second of the three environments upon which the agent was trained. We used the same network architecture as we did for Pong and the hyperparameters were the same during training with the exception of the number of timesteps for which the agent was trained. In Pong we used 10 million timesteps, however, since Breakout is more complex, it required 20 million timesteps in order to show a trend in the data that the agent is indeed improving over time. It should be noted that in the majority of papers that are referenced in this project it is common to use 100 million timesteps when training on Atari; it would not be feasible to train the agent for this number of timesteps on the hardware used for training as this would take over 5 days for a single algorithm on the environment.
 
-Figure (TODO) shows the results of training the agent of 20 million timesteps and the average reward achieved over every (TODO) timesteps. The (TODO) line shows the results for training the DQN, Double DQN and Double-Duelling DQN in (TODO) respecitvely. We can clearly observe that the DQN algorithm is the worst performing with the duelling-double DQN having the most stable and best performance. We also observe the same results during evaluation of the agent over 1000 episodes as shown in Figure (TODO).
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.75\textwidth]{chapters/chapter5/images/breakout_plot.jpg}
+  \caption[Breakout Training results]{
+    \label{fig:breakout-train-results}
+  }
+\end{figure}
+
+Figure \ref{fig:breakout-train-results} shows the results of training the agent of 20 million timesteps, the plots are generated using a exponential weighted mean where the decay is expressed in terms of a window (span) 200 samples. The (TODO) line shows the results for training the DQN, Double DQN and Duelling DQN in (TODO) respecitvely. We can clearly observe that the DQN algorithm is the worst performing with the duelling-double DQN having the most stable and best performance. We also observe the same results during evaluation of the different algorithms that is shown in Table \ref{table:eval:testing-results}.
 
 \subsection{Space Invaders}
 Space Invaders was the final and most difficult environment that the algorithms were trained upon. It presented some challenges during training, one notable challenge was that the \textit{``frameskip''} hyperparameter could not be kept at the value of $k = 4$ like was used in the previous two environments. In the Atari Space Invaders the players bullets flashed off every four frames. This meant that everytime the frame was sampled, we always missed the player bullet and therefore the agent would of needed to learn to play without the all the information about the players bullets. Therefore, for Space Invaders we changed to a frameskip of $k = 3$.
@@ -41,7 +57,7 @@ Figure \ref{fig:si-train-results} shows the results of the training the agent ov
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=1.0\textwidth]{chapters/chapter5/images/si_plot.jpg}
+  \includegraphics[width=0.75\textwidth]{chapters/chapter5/images/si_plot.jpg}
   \caption[Space Invaders training result plot]{Space Invaders training result. The results are shown for training on the three different algorithms which can be seen in the legend. The highest performing is the Duelling DQN network, outperforming double and original DQN. The graph is generated using the training data where the reward is averaged using an exponential moving average with a span of 200 (we have a decay based on the previous 200 data points).
     \label{fig:si-train-results}
   }
@@ -59,8 +75,8 @@ The sections above show the results after testing the three algorithms on three 
     \multicolumn{1}{|c|}{Random}        & -20.4       & 1.2          & 179            \\ \hline
     \multicolumn{1}{|c|}{Human Average} & -3          & 31           & \textbf{3690}  \\ \hline
     \multicolumn{1}{|c|}{DQN}           & 20          & 135          & 970            \\ \hline
-    \multicolumn{1}{|c|}{Double DQN}    & 21          & TODO         & TODO           \\ \hline
-    \multicolumn{1}{|c|}{Duelling DQN}  & \textbf{21} & \textbf{364} & 1120           \\ \hline
+    \multicolumn{1}{|c|}{Double DQN}    & 21          & 296          & 1245           \\ \hline
+    \multicolumn{1}{|c|}{Duelling DQN}  & \textbf{21} & \textbf{364} & 1620           \\ \hline
   \end{tabular}
   \caption[Testing results for Original/Double/Duelling DQN]{Testing results from the three different algorithms, original, double and duelling DQN. The highest score in each category is shown in \textbf{bold}. We achieve the highest score in both Pong and Brakout. However, in Space Invaders we don't beat the average human; with more training time this outcome may be different.}\label{table:eval:testing-results}
 \end{table}
