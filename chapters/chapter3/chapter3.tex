@@ -1,13 +1,13 @@
 \chapter{Design}
-This section will cover the details of the methods and algoithms that were used in the implementation of the project. The previous section covered the history of some of these techniques which were imperative for building the foundation of the methods described in this chapter.
+This section will cover the details of the methods and algorithms that were used in the implementation of the project. The previous section covered the history of some of these techniques which were imperative for building the foundation of the methods described in this chapter.
 
-Deep Q-Networks and its enhancements have the majority of focus, as it is the basis of the project. During the development of the project, the major focus was having an understanding of both reinforcement learning mathematically, and also how it is implemented in practise. It was noted in David Silver UCL reinforcement learning lecture series \cite{davidsilver-course} that some of the requirements for policy convergance are not as strict in practise (making the actual implementation simpler).
+Deep Q-Networks and its enhancements have the majority of the focus, as it is the basis of the project. During the development of the project, the major focus was having an understanding of both reinforcement learning mathematically, and also how it is implemented in practice. It was noted in David Silver UCL reinforcement learning lecture series \cite{davidsilver-course} that some of the requirements for policy convergence are not as strict in practice (making the actual implementation simpler).
 
 \section{Markov decision process}
 \label{dsgn:sec:mdp}
 This section will describe some of the basics of Markov decision processes (MDP), they are the foundation of the reinforcement learning methods that will be described later in this chapter. First, we need some mathematical definitions of MDPs, these are from David Silver's excellent lecture series on Reinforcement Learning.
 
-Markov decision processes are just markov reward processes with decisions, i.e. At each state $S_t$, we have a finite set of actions to choose from in order to get to a new state $S_{t+1}$.
+Markov decision processes are just Markov reward processes with decisions, i.e. At each state $S_t$, we have a finite set of actions to choose from to get to a new state $S_{t+1}$.
 
 \begin{defn}
 	A Markov decision process is a tuple $\langle \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma \rangle$.
@@ -20,11 +20,11 @@ Markov decision processes are just markov reward processes with decisions, i.e. 
 	\end{itemize}
 \end{defn}
 
-The definition above defines a Markov decision process, which we use as a basis for describing the methods in reinforcement learning. In order to illustrate the idea, let us consider the game of Pong. For simplicity, assume we can encode each frame of the game into the set of states $\mathcal{S}$. In order to play the game, we need to know what the best action to take would be at each frame of the game to move the paddle under the ball, hitting the ball back and possibly scoring a point.
+The definition above defines a Markov decision process, which we use as a basis for describing the methods in reinforcement learning. To illustrate the idea, let us consider the game of Pong. For simplicity, assume we can encode each frame of the game into the set of states $\mathcal{S}$. To play the game, we need to know what the best action to take would be at each frame of the game to move the paddle under the ball, hitting the ball back and possibly scoring a point.
 
-Given a frame of the game $S_t$ and the set of actions we can choose from $A_t$, we are going to try and maximise our future (expected) reward using the reward function $\mathcal{R}_{S_t}^{A_t}$. We want to choose the best action $a$, that will result in the maximum future reward. It is important that we don't look at immediate rewards only, since, in Pong we don't get the point until we have hit the ball back to the other side.
+Given a frame of the game $S_t$ and the set of actions we can choose from $A_t$, we are going to try and maximise our future (expected) reward using the reward function $\mathcal{R}_{S_t}^{A_t}$. We want to choose the best action $a$, that will result in the maximum future reward. We mustn't look at immediate rewards only, since, in Pong, we don't get the point until we have hit the ball back to the other side.
 
-In order to look at future rewards, we use the discount factor $\gamma$. When $\gamma$ is close to zero, we are \textit{``myopic''} in our evaluation (we only look for short-term rewards). However, as $\gamma$ gets closer towards 1, we are ``\textit{far-sighted}'' in our evaluation.
+To look at future rewards, we use the discount factor $\gamma$. When $\gamma$ is close to zero, we are \textit{``myopic''} in our evaluation (we only look for short-term rewards). However, as $\gamma$ gets closer towards 1, we are ``\textit{far-sighted}'' in our evaluation.
 
 Overall, we need to know a strategy that provides the best action to take in a given state which maximises the expected total reward. This is called a \textit{policy}, denoted by $\pi$.
 
@@ -35,7 +35,7 @@ Overall, we need to know a strategy that provides the best action to take in a g
 	\end{center}
 \end{defn}
 
-The policy of an agent fully describes the behaviour of the agent \cite{davidsilver-course} which only depends on the current state, not the history. In order to describe the optimal policy for an agent to follow, we first need some more definitions.
+The policy of an agent fully describes the behaviour of the agent \cite{davidsilver-course} which only depends on the current state, not the history. To describe the optimal policy for an agent to follow, we first need some more definitions.
 
 \begin{defn}
 	$G_t$ is the total discounted reward for time-step $t$
@@ -72,11 +72,11 @@ The policy of an agent fully describes the behaviour of the agent \cite{davidsil
 	\end{center}
 \end{defn}
 
-Once we have found the optimal action-value function we consider the MDP ``solved''. Additionaly, we know that we can, given some state, take actions that will lead to the highest possible future reward.
+Once we have found the optimal action-value function we consider the MDP ``solved''. Additionally, we know that we can, given some state, take actions that will lead to the highest possible future reward.
 
 \subsection{Markov property}
 \label{dsgn:sec:markov-prop}
-With Markov decision processes we assume that in each state, we have all the information we require in order to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as it is impossible to tell if the ball is moving towards or away from the paddle.
+With Markov decision processes we assume that in each state, we have all the information we require to produce an optimal action. However, in games such as Pong and Breakout, we may not necessarily have all the information we require at a single time. For example, Figure \ref{fig:breakout-brick-fig} shows a screenshot of the Atari game Breakout. In this situation, we cannot decern the optimal action given only this frame as it is impossible to tell if the ball is moving towards or away from the paddle.
 
 \begin{figure}[htbp]
 	\centering
@@ -86,11 +86,11 @@ With Markov decision processes we assume that in each state, we have all the inf
 	}
 \end{figure}
 
-In order to solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the \textit{``frame-stack''}. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which then allows the network to be able to predict the path of the ball, allowing the network to make good actions leading to a higher score.
+To solve this problem, in we store a small rolling history of $k$ states (where typically, $k = 4$) called the \textit{``frame-stack''}. During forward passes through the network we pass the whole frame-stack to the network. This provides a history of frames to the network which then allows the network to be able to predict the path of the ball, allowing the network to make good actions leading to a higher score.
 
 \section{Reinforcement learning}
 \label{dsgn:sec:rl}
-Following on from the previous section on Markov decision processes, this section decribes Reinforcement learning and how these two methods are tightly connected to each other.
+Following on from the previous section on Markov decision processes, this section describes Reinforcement learning and how these two methods are tightly connected.
 
 In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl-diagram}. The agent gets the state from the environment, using its policy, it chooses an action to take -- updating the environment. The environment then produces some new state and a reward signal which the agents uses the pick the next action.
 
@@ -106,7 +106,7 @@ In its basic form, RL can be modelled graphically as shown in Figure \ref{fig:rl
 \label{dsgn:sec:rl:expt-v-explor}
 A key idea in RL is the problem of exploration vs exploration. This means that if we have an environment, and a policy that dictates how we should navigate the environment, should always follow the policy, or should we deviate and try to find a better path resulting in a higher reward.
 
-In this project we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability (denoted by $\epsilon$) of random actions, this is decreased over a predefined number of timesteps. Below is the method for choosing the actions.
+In this project, we follow a method called $\epsilon$-greedy in which we explore forever, but with a linearly decreasing probability (denoted by $\epsilon$) of random actions, this is decreased over a predefined number of timesteps. Below is the method for choosing the actions.
 
 \begin{center}
 	\begin{itemize}
@@ -115,17 +115,17 @@ In this project we follow a method called $\epsilon$-greedy in which we explore 
 	\end{itemize}
 \end{center}
 
-Although $\epsilon$-greedy is a simple method, it is suprisingly effective in exploring the environment and produces high scoring models. In fact, this method was used in the original DQN paper by V.Mnih et al. in which they scored better than human averages in the majority of Atari 2600 games.
+Although $\epsilon$-greedy is a simple method, it is surprisingly effective in exploring the environment and produces high scoring models. This method was used in the original DQN paper by V.Mnih et al. in which they scored better than human averages in the majority of Atari 2600 games.
 
-In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and is left for future work.
+In the area of reinforcement learning, there are some more advanced methods such as Upper Confidence Bounds (UCB) and Thompson Sampling. However, these Bayesian-based methods are not implemented/explored in this project and are left for future work.
 
 \newpage
 
 \section{Q-Learning}
 \label{dsgn:sec:qlearning}
-Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stoachastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled \textit{``Learning from delayed rewards''}.
+Q-Learning is a model-free algorithm that is used to solve, iteratively, the Bellman equation for the MDP. By model-free we mean that the algorithm does not require a model of the environment, therefore it can easily handle stochastic rewards. The method was introduced in 1989 by Chris Watkins in his PhD thesis titled \textit{``Learning from delayed rewards''}.
 
-We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the optimal policy $\pi$ based on the Q-values. The Q-Learning algorithm stores the state-action values in a large table of values, as represented below in Table \ref{table:design:qtable}. For each possible state that the enviroment can produce, we store a single value (Q-value) for each action that can be performed in that state. These Q-values represents the `\textit{quality}`'' of being in a state $s$ and taking action $a$.
+We can use Q-Learning to approximate $q_*(s, a)$, this produces the optimal policy $\pi$ based on the Q-values. The Q-Learning algorithm stores the state-action values in a large table of values, as represented below in Table \ref{table:design:qtable}. For each possible state that the environment can produce, we store a single value (Q-value) for each action that can be performed in that state. These Q-values represents the `\textit{quality}`'' of being in a state $s$ and taking action $a$.
 
 \begin{table}[htb!]
 	\centering
@@ -172,7 +172,7 @@ We can use Q-Learning in order to approximate $q_*(s, a)$, this produces the opt
 	\caption[Q-Table Example]{Example of how state-action pairs are stored in a Q-Table (NOOP abbreviates `No action/No operation')}\label{table:design:qtable}
 \end{table}
 
-Since the Q-Learning algorithm is iterative, at each timestep, we need to update the Q-value corresponding to the occupied state and the action we took. In Chapter \ref{dsgn:sec:dql} this idea will be expanded upon, by using neural networks as a function approximator, replacing the need to store the whole table of Q-values. Algorithm \ref{algo:qlearning} shows how the algorithm is implemented in order to both, predict the next action to take, and updating the Q-table. In order to update the Q-values for each state we use the Q-value update equation which is shown below.
+Since the Q-Learning algorithm is iterative, at each timestep, we need to update the Q-value corresponding to the occupied state and the action we took. In Chapter \ref{dsgn:sec:dql} this idea will be expanded upon, by using neural networks as a function approximator, replacing the need to store the whole table of Q-values. Algorithm \ref{algo:qlearning} shows how the algorithm is implemented to both, predict the next action to take, and updating the Q-table. To update the Q-values for each state we use the Q-value update equation which is shown below.
 
 \begin{defn}
 	$$Q_{t+1}(s_t, a_t) = Q_t(s_t, a_t) + \alpha(R_t + \gamma \max_a Q(s_{t+1}, a) - Q(s_t, a_t))$$
@@ -185,19 +185,19 @@ Since the Q-Learning algorithm is iterative, at each timestep, we need to update
 	\end{itemize}
 \end{defn}
 
-A major issue with Q-Learning is that since we perform a maximisation of all future rewards when updating the Q-values, this can lead to the algorithm over-estimating the quality of actions and slowing down the learning. During training, we use the same Q-function in order to both produce the expected maximum action-value of future rewards and, select the best possible action in the current state.
+A major issue with Q-Learning is that since we perform a maximisation of all future rewards when updating the Q-values, this can lead to the algorithm over-estimating the quality of actions and slowing down the learning. During training, we use the same Q-function to both produce the expected maximum action-value of future rewards and, select the best possible action in the current state.
 
 \input{algorithms/qlearning.tex}
 
-As shown above, we can use Q-learning to find the optimal policy by storing all the $q_*(s, a)$ values. However, in practise we run into a issue with the size of the Q-table in that it quickly becomes too big to store in memory. This issue is especially prevalent for large MDPs such as those from Atari games due to the raw pixel input. In order to handle the high-dimensonal input from the games, we can instead use a function approximator to estimate the values of $q_*(s, a)$. This idea will be developed in Section \ref{dsgn:sec:dql} where RL is combined with Deep Learning.
+As shown above, we can use Q-learning to find the optimal policy by storing all the $q_*(s, a)$ values. However, in practice, we run into an issue with the size of the Q-table in that it quickly becomes too big to store in memory. This issue is especially prevalent for large MDPs such as those from Atari games due to the raw pixel input. To handle the high-dimensional input from the games, we can instead use a function approximator to estimate the values of $q_*(s, a)$. This idea will be developed in Section \ref{dsgn:sec:dql} where RL is combined with Deep Learning.
 
 \section{Deep Learning}
 \label{dsgn:sec:dl}
-This section will describe the basics used in the project for Deep Learning and some of the techniques used in order to construct the Deep Q-Networks discussed in Section \ref{dsgn:sec:dql}.
+This section will describe the basics used in the project for Deep Learning and some of the techniques used to construct the Deep Q-Networks discussed in Section \ref{dsgn:sec:dql}.
 
 \subsection{Multi-layer perceptron (MLP)}
 \label{dsgn:sec:dl:mlp}
-The main technique that underpins most of the artificial neural networks (ANN) that are used today is how we combine single neurons to for networks of neurons. Figure \ref{fig:neuron} shows how we model an artificial neuron with weights and activation functions, this is supposed to loosely model how neurons work inside the brain. The input connections are acting in place of synapses which connect together to form networks.
+The main technique that underpins most of the artificial neural networks (ANN) that are used today is how we combine single neurons to create networks of neurons. Figure \ref{fig:neuron} shows how we model an artificial neuron with weights and activation functions, this is supposed to loosely model how neurons work inside the brain. The input connections are acting in place of synapses which connect to form networks.
 
 \begin{figure}[ht!]
 	\centering
@@ -219,13 +219,13 @@ Finally, each neuron has an activation function associated, there are many possi
 	\caption{Diagram representation of MLP} \label{fig:mlp}
 \end{figure}
 
-Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons together. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hidden layer is connected to the output node/nodes.
+Figure \ref{fig:mlp} shows the structure of an MLP (also called artificial neural network), we construct this network by combining multiple neurons. The MLP consists of the $n$ input neurons (each having a single input value), with then at least one hidden layer. The last hidden layer is connected to the output node/nodes.
 
-In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as\textit{``fully-connected''} as every node in a layer is connected to every other node in the next layer. One downside to this `fullyconnected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed in order to reduce overfitting. Some examples are using regularizaition, dropout layers \footnote{Dropout layer. A layer in a ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrent neural networks (RNNs) that have a small `memory' capacity due to the network structure.
+In general, for each node in the ANN, it will be connected to every other node in the following layer, whether that is another hidden layer or the output layer. This network structure is referred to as\textit{``fully-connected''} as every node in a layer is connected to every other node in the next layer. One downside to this `fully connected-ness' is that it tends to make them prone to overfitting to the input. Therefore, many techniques have been developed to reduce overfitting. Some examples are using regularization, dropout layers \footnote{Dropout layer. A layer in an ANN that randomly ignores the input from the previous layer with a given probability. It aids in preventing neurons from becoming dependent on other neurons in previous layers, thereby reducing the effect of overfitting.}, early stopping and batch normalisation. This is not the only type of network consisting of artificial neurons; by connecting the neurons in different ways the networks exhibit different behaviours such as recurrent neural networks (RNNs) that have a small `memory' capacity due to the network structure.
 
 \subsection{Convolutional Neural Network (CNN)}
 \label{dsgn:sec:dl:cnn}
-Neural networks are excellent approximators for complex functions that need to be learnt, however, when we have high-dimensonal inputs the size of the network can become too difficult to manage. An important note is that any CNN can in theory be implemented as a neural network individual neurons. However, if we take as an example a single frame from Atari which is 210 x 160 pixels each with RGB values. This results in having over 100,000 weights on just the input layers and as such, too many weights to process in an efficient manner.
+Neural networks are excellent approximators for complex functions that need to be learnt, however, when we have high-dimensional inputs the size of the network can become too difficult to manage. An important note is that any CNN can, in theory, be implemented as a neural network of individual neurons. However, if we take as an example a single frame from Atari which is 210 x 160 pixels each with RGB values. This results in having over 100,000 weights on just the input layers and as such, too many weights to process efficiently.
 
 \begin{figure}[htbp]
 	\centering
@@ -235,18 +235,18 @@ Neural networks are excellent approximators for complex functions that need to b
 	}
 \end{figure}
 
-In addition, CNNs can exploit the spatial structure of the data by using different building blocks in order to construct the network. Some of the layers help to avoid problems such as overfitting which is a key problem when training these networks. Others such as ReLU layers help reduce the training time since it simplifies the activation functions with having too much impact on the overall network accuracy. Below is a list of a the most common layers used in CNNs with a short explanation the role of each.
+Also, CNNs can exploit the spatial structure of the data by using different building blocks to construct the network. Some of the layers help to avoid problems such as overfitting which is a key problem when training these networks. Others such as ReLU layers help reduce the training time since it simplifies the activation functions with having too much impact on the overall network accuracy. Below is a list of the most common layers used in CNNs with a short explanation the role of each.
 
 \begin{itemize}
-	\item Convolution. Layer with filters that have learnable weights. Computing output is dot product of each filter with the input.
-	\item Pooling. Layer that acts as non-linear downsampling of the input. Helps control overfitting by reducing size of network and number of learnable parameters.
-	\item ReLU. Layer which applies an activation function to the input of the layer that removes negative values from the input by setting to those values to zero. \cite{Romanuke2017} Improves speed of training the network.
-	\item Fully-connected. At the end of the network, a fully-connnected layer can be added in order to perform high-level decisions such as predicting MNIST digits. This is usually an MLP (described in Section \ref{dsgn:sec:dl:mlp}).
+	\item Convolution. Layer with filters that have learnable weights. Computing output is the dot product of each filter with the input.
+	\item Pooling. Layer that acts as non-linear downsampling of the input. Helps control overfitting by reducing the size of the network and number of learnable parameters.
+	\item ReLU. A Layer which applies an activation function to the input of the layer that removes negative values from the input by setting to those values to zero. \cite{Romanuke2017} Improves speed of training the network.
+	\item Fully-connected. At the end of the network, a fully-connected layer can be added to perform high-level decisions such as predicting MNIST digits. This is usually an MLP (described in Section \ref{dsgn:sec:dl:mlp}).
 \end{itemize}
 
-By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learnt by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning.
+By carefully combining these different layers, we form a convolutional neural network. The main applications are in image recognition and visual processing such as images and video; in this project we a CNN is used to process frames from Atari. As previously touched upon in Section \ref{bg:sec:cnn-vis}, we can view what information the network has chosen to learn by looking at the activation in each layer, and each filter. It can provide insight into how well the network is learning and if it requires fine-tuning.
 
-Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a hardwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing hardwritten digits from 0-9} dataset. It uses a series of convolution (CONV) and pooling (POOL) layers before connnecting to a fully-connected network (with 10 outputs) which is used to perform the final prediction of the number.
+Figure \ref{fig:mnist-arch} provides an example network that is used to predict the value of a handwritten digit from the MNIST\footnote{\href{http://yann.lecun.com/exdb/mnist/}{MNIST}. Large database of 60,000 training image of 28x28 images showing handwritten digits from 0-9} dataset. It uses a series of convolution (CONV) and pooling (POOL) layers before connecting to a fully-connected network (with 10 outputs) which is used to perform the final prediction of the number.
 
 \begin{figure}[htbp]
 	\centering
@@ -263,7 +263,7 @@ The following sections will outline how the previous sections have laid the foun
 In this project we use neural networks as the function aprroximator for $Q(s, a)$, we represent this by using $\theta$ to represent the parameterisation of the Q-function, $Q(s, a; \theta)$. Referring back to Section \ref{dsgn:sec:mdp}, the aim of Q-learning is to find a function $Q(s, a; \theta)$ that closely approximated the optimal action-value function $Q_*(s, a)$.
 The \textit{value iteration} algorithm will converge to the optimal action-value function, $Q_i \rightarrow Q_*$ as $i \rightarrow \infty$ \cite{richardsutton2018}. In practise however, we need to use a function approximator as it can generalise the solution, given by $Q(s, a; \theta) \approx Q_*(s, a)$.
 
-In order to train the network, we need to define the `loss' function for the Q-function. This will allow us to update the weights of the network in the direction of the gradient, bringing the Q-function closer to $Q_*(s, a)$ with every timestep.
+to train the network, we need to define the `loss' function for the Q-function. This will allow us to update the weights of the network in the direction of the gradient, bringing the Q-function closer to $Q_*(s, a)$ with every timestep.
 
 \begin{defn}
 	The loss function of the Q-network is defined by
@@ -271,9 +271,9 @@ In order to train the network, we need to define the `loss' function for the Q-f
 		L_i(\theta_i) = \mathbb{E}\left[(y_i - Q(s, a; \theta_i))^2\right]
 	\]
 \end{defn}
-where $y_i = \mathbb{E}\left[r + \gamma \max_{a'}Q(s', a'; \theta_{i - 1})\vert s, a\right]$ is the target value for iteration $i$ and the function $L_i(\theta_i)$ is updated at every timestep. It is also important to note that we hold the parameters of the network fixed from the previous iteration $\theta_{i - 1}$ in order to stabilize learning.
+where $y_i = \mathbb{E}\left[r + \gamma \max_{a'}Q(s', a'; \theta_{i - 1})\vert s, a\right]$ is the target value for iteration $i$ and the function $L_i(\theta_i)$ is updated at every timestep. It is also important to note that we hold the parameters of the network fixed from the previous iteration $\theta_{i - 1}$ to stabilize learning.
 
-By differentiating the loss function defined above, with respect to the weights of the network (denoted by $\theta$), we get the following gradient.
+By differentiating the loss function defined above, for the weights of the network (denoted by $\theta$), we get the following gradient.
 
 \begin{defn}
 	\[
@@ -281,41 +281,41 @@ By differentiating the loss function defined above, with respect to the weights 
 	\]
 \end{defn}
 
-In practise, when implementing the Q-learning algorithm, it is more computationally efficient to not compute the ful expectation of the graident, rather we optimise the loss using stoachastic graident descent. This leads us onto the Deep Q-Learning algorithm which is presented below.
+In practice, when implementing the Q-learning algorithm, it is more computationally efficient to not compute the full expectation of the gradient, rather we optimise the loss using stochastic gradient descent. This leads us onto the Deep Q-Learning algorithm which is presented below.
 
 \input{algorithms/dqn.tex}
 
 \subsection{Experience Replay}
 \label{dsgn:subsec:exp-replay}
 
-One of the problems with the Q-learning algorithm is that if we try and learn from consecutative frames, the algorithm will take a long time to converge. This is due to the large correlation between consecutative frame of the Atari games. By splitting up the training samples it breaks this correlation and reduces the variance of the gradient updates.
+One of the problems with the Q-learning algorithm is that if we try and learn from consecutive frames, the algorithm will take a long time to converge. This is due to the large correlation between consecutive frames of the Atari games. By splitting up the training samples it breaks this correlation and reduces the variance of the gradient updates.
 
 This approach is known as \textit{``experience replay''} \cite{Lin1992ReinforcementLF}. Every timestep, we store the tuple $e_t = (s_t, a_t, r_t, s_{t+1})$ of experience in the replay memory which is denoted by $\mathcal{D}$ in Algorithm \ref{algo:dqn}. Therefore, over time we accumulate a collection of experiences such that $D = e_1, e_2, \hdots, e_N$.
 
-In practise, we keep a rolling collection of experiences for a memory with capacity N; in this project the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$. More detail on the implementation of this method is provided in \ref{imple:dqn}.
+In practice, we keep a rolling collection of experiences for a memory with capacity N; in this project, the experience is stored in a Double-Ended Queue\footnote{Double-ended queue is an abstract data type that can generalise a queue. It typically provides operations to add/remove elements from the head and tail.}. It means that at timestep $N+1$, we remove the tuple $e_1$ and replace it with tuple $e_{N+1}$. More detail on the implementation of this method is provided in \ref{imple:dqn}.
 
-During the Q-learning updates, we take a mini-batch of samples, $e \sim \mathcal{D}$, randomly from the replay memory in order to perform the stoachastic gradient descent. This method comes with several benefits that are outlined below.
+During the Q-learning updates, we take a mini-batch of samples, $e \sim \mathcal{D}$, randomly from the replay memory to perform the stochastic gradient descent. This method comes with several benefits that are outlined below.
 
 \begin{itemize}
 	\item We randomly sample the replay memory at each step, we can reuse experience samples multiple times, providing much greater data efficiency.
-	\item As mentioned previously, there is a strong correlation between consecutative frames, experience replay provides a method to remove this correlation.
+	\item As mentioned previously, there is a strong correlation between consecutive frames, experience replay provides a method to remove this correlation.
 \end{itemize}
 
 Despite the benefits that experience replay brings, this approach has limitations. The main being that each experience sample is treated with the same importance i.e. each tuple has an equal probability of being chosen in a sample $e$. Therefore, in 2015 Schaul et al. \cite{per} introduced a new method called ``Prioritized Experience Replay'' which aimed to ensure that more important experiences are replayed with a greater frequency.
 
 \section{Q-Learning improvements}
 \label{dsgn:sec:qlearning:qextra}
-As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can lead to an overestimation of the quality of some actions. Therefore, this section describes two different approaches in order to improve upon the algorithm and reduce the maximisation bias and thereby improving the stability of learning.
+As discussed in Section \ref{dsgn:sec:dql}, due to how Q-learning works, it can lead to an overestimation of the quality of some actions. Therefore, this section describes two different approaches to improve upon the algorithm and reduce the maximisation bias and thereby improving the stability of learning.
 
 \subsection{Fixed Q-Network}
 \label{dsgn:sec:qlearning:fixed}
-One of the problems with the original tabular Q-learning algrithm is that if we use the same neural network to pick the best action and perform our estimation of the future reward, we are chasing a constantly moving target. This would lead to unstable learning and takes a very long time for the algorithm to converge (which it may not do in this case). However, a solution to this problem is to keep a copy of the Q-network, one that ``lags'' behind the other. We call the copied network the ``fixed'' or ``frozen'' Q-network.
+One of the problems with the original tabular Q-learning algorithm is that if we use the same neural network to pick the best action and perform our estimation of the future reward, we are chasing a constantly moving target. This would lead to unstable learning and takes a very long time for the algorithm to converge (which it may not do in this case). However, a solution to this problem is to keep a copy of the Q-network, one that ``lags'' behind the other. We call the copied network the ``fixed'' or ``frozen'' Q-network.
 
 Therefore, we maintain two networks, the ``online'' and ``fixed'' networks. Although this doubles the memory requirements to store the weights, we aren't performing backpropagation on the fixed network, we only perform forward passes, thereby we don't have the same increase in computational requirements. This approach also introduces another hyperparameter that must be chosen, that is, how often do we update the ``fixed'' network. Experimental results have shown that the algorithm is quite resistant to changes, leading to similar performance for a range of values. For Atari, a good choice is to update the fixed network every 10000 timesteps.
 
 \subsection{Double Q-Learning}
 \label{dsgn:sec:qlearning:doubledqn}
-In the original Q-learning algorithm, experiemental results have shown that under certain conditions the algorithm tends to overestimate the quality of some actions. Therefore, in order to reduce the bias, H. V. Hasselt introduced the double Q estimator function in his 2010 paper \cite{double-ql}. It presents an off-policy reinfrocement learning algorithm where we use two Q-functions, one for the value evaluation and the other for selecting the next action.
+In the original Q-learning algorithm, experimental results have shown that under certain conditions the algorithm tends to overestimate the quality of some actions. Therefore, to reduce the bias, H. V. Hasselt introduced the double Q estimator function in his 2010 paper \cite{double-ql}. It presents an off-policy reinforcement learning algorithm where we use two Q-functions, one for the value evaluation and the other for selecting the next action.
 
 \begin{defn}
 	Double Q-Learning update equation where
@@ -331,14 +331,14 @@ In the original Q-learning algorithm, experiemental results have shown that unde
 
 This definition means that the estimated value of future rewards is calculated using a different policy, solving the original overestimation issue with Q-learning. An additional note is that although this prevents the overestimation, it can lead to underestimation of the Q-values in some situations.
 
-For this project, we use double Q-learning in combination with deep learning. As proposed by H. V. Hasselt et al. (2015) \cite{deep-double-qlearning}, the original Double Q-Learning algorithm can be simpilifed to only need minor changes to the DQN algorithm in order to achieve a similar effect in reducing the overestimation.
+For this project, we use double Q-learning in combination with deep learning. As proposed by H. V. Hasselt et al. (2015) \cite{deep-double-qlearning}, the original Double Q-Learning algorithm can be simplified to only need minor changes to the DQN algorithm to achieve a similar effect in reducing the overestimation.
 
-This means that rather than maintaining two different networks and performing backpropagation on both, use the target (online) Q-network and fixed network in order to determine the best action to take given a state. The fixed (or frozen) network is the network described in Section \ref{dsgn:sec:qlearning:fixed} which uses a frozen copy of the network that is only updated periodically.
+This means that rather than maintaining two different networks and performing backpropagation on both, use the target (online) Q-network and fixed network to determine the best action to take given a state. The fixed (or frozen) network is the network described in Section \ref{dsgn:sec:qlearning:fixed} which uses a frozen copy of the network that is only updated periodically.
 
 \subsection{Duelling Q-Learning}
 \label{dsgn:sec:qlearning:dueldqn}
 
-This section will describe another improvement to the original Q-learning algorithm that makes changes to the underlying network architecture in order to improve approximation of $q_*(s, a)$. The architecture was first proposed by Z. Wang et al, 2015 \cite{wang2015dueling}.
+This section will describe another improvement to the original Q-learning algorithm that makes changes to the underlying network architecture to improve the approximation of $q_*(s, a)$. The architecture was first proposed by Z. Wang et al, 2015 \cite{wang2015dueling}.
 
 By using Definition \ref{action-value-func} and Definition \ref{state-value-func} we can define a quantity called the Advantage, denoted by $A_\pi(\cdot, \cdot)$.
 
@@ -351,7 +351,7 @@ By using Definition \ref{action-value-func} and Definition \ref{state-value-func
 	\]
 \end{defn}
 
-In order to know what quantity the advantage function produces, recall that the Q-function describes the quality of taking an action $a$ in state $s$, and that the value function describes how good it is to be in a state $s$. Therefore, since the advantage function subtracts the value of a function from the Q-function, it obtains a relative measure of the importance of each action $a$ in state $s$.
+to know what quantity the advantage function produces, recall that the Q-function describes the quality of taking an action $a$ in state $s$, and that the value function describes how good it is to be in a state $s$. Therefore, since the advantage function subtracts the value of a function from the Q-function, it obtains a relative measure of the importance of each action $a$ in state $s$.
 
 \begin{figure}[htbp]
 	\centering
@@ -361,7 +361,7 @@ In order to know what quantity the advantage function produces, recall that the 
 	}
 \end{figure}
 
-As shown above, rather than having a single fully-connnetced layer than predicts a Q-value for each output (like in Section \ref{dsgn:sec:dql}), the Duelling Q-Network maintains two discrete paths. One path attempts to predict the function $V_\pi(s)$, the other predicts $A_\pi(s, a)$. Finally, these two paths are combined together to calculate $Q_\pi(s, a)$. It is important to note, this is not an extra step in the training process, rather, it is built directly into the network and calculated during a forward pass. This is represented by the green lines combining the two paths to the output layer in Figure \ref{fig:duelling-arch}.
+As shown above, rather than having a single fully-connetced layer than predicts a Q-value for each output (like in Section \ref{dsgn:sec:dql}), the Duelling Q-Network maintains two discrete paths. One path attempts to predict the function $V_\pi(s)$, the other predicts $A_\pi(s, a)$. Finally, these two paths are combined to calculate $Q_\pi(s, a)$. It is important to note, this is not an extra step in the training process, rather, it is built directly into the network and calculated during a forward pass. This is represented by the green lines combining the two paths to the output layer in Figure \ref{fig:duelling-arch}.
 
 \begin{defn}
 	Q-function combining advantage and value functions
@@ -373,11 +373,11 @@ As shown above, rather than having a single fully-connnetced layer than predicts
 
 As the above defintion shows we calculate estimates of the Q-values for each action, and choosing the best action requires finding $a_* = \argmax_{a' \in A} Q(s, a; \theta)$. $\alpha$ and $\beta$ are the parameters for the value and advantage functions respectively.
 
-In order to calculate the Q-function, it would be intuitive to perform the arithmatic sum of the value and advantage function based on Definition \ref{advantage-func}, however, using that method leads to two problems \cite{wang2015dueling}.
+to calculate the Q-function, it would be intuitive to perform the arithmetic sum of the value and advantage function based on Definition \ref{advantage-func}, however, using that method leads to two problems \cite{wang2015dueling}.
 
 \begin{itemize}
 	\item It can be problimatic to assume the functions give good estimates of the true values, especially using parameterised versions of the functions
 	\item Naive sum of two values is `unidentifiable'. Given a Q-value, we cannot recover $V_\pi(\cdot)$ and $A_\pi(\cdot, \cdot)$ uniquely
 \end{itemize}
 
-This architecture has shown to achieve best in-class performance over the different methods that are described in the sections above. In addition, these methods don't have to be used in isolation, some of the methods can be combined to further improve the performance of the Deep Q-Networks. For example, this investigates both the Double Q-network and Duelling Q-network architectures which both outperform the basic DQN since the methods are much more stable by prevnting the overestimation problem.
+This architecture has shown to achieve best-in-class performance over the different methods that are described in the sections above. Also, these methods don't have to be used in isolation, some of the methods can be combined to further improve the performance of the Deep Q-Networks. For example, this investigates both the Double Q-network and Duelling Q-network architectures which both outperform the basic DQN since the methods are much more stable by preventing the overestimation problem.
