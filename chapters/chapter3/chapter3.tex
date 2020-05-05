@@ -263,7 +263,7 @@ The following sections will outline how the previous sections have laid the foun
 In this project we use neural networks as the function aprroximator for $Q(s, a)$, we represent this by using $\theta$ to represent the parameterisation of the Q-function, $Q(s, a; \theta)$. Referring back to Section \ref{dsgn:sec:mdp}, the aim of Q-learning is to find a function $Q(s, a; \theta)$ that closely approximated the optimal action-value function $Q_*(s, a)$.
 The \textit{value iteration} algorithm will converge to the optimal action-value function, $Q_i \rightarrow Q_*$ as $i \rightarrow \infty$ \cite{richardsutton2018}. In practise however, we need to use a function approximator as it can generalise the solution, given by $Q(s, a; \theta) \approx Q_*(s, a)$.
 
-to train the network, we need to define the `loss' function for the Q-function. This will allow us to update the weights of the network in the direction of the gradient, bringing the Q-function closer to $Q_*(s, a)$ with every timestep.
+To train the network, we need to define the `loss' function for the Q-function. This will allow us to update the weights of the network in the direction of the gradient, bringing the Q-function closer to $Q_*(s, a)$ with every timestep.
 
 \begin{defn}
 	The loss function of the Q-network is defined by

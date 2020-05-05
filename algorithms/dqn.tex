@@ -5,16 +5,21 @@
 	Initialize action-value function $Q$ with random weights $\theta$\;
 	Initialize \textbf{target} action-value function $\hat{Q}$ with weights $\theta_{}^{-} = \theta$\;
 	\For{timestep = 1, T}{
-	Initialise S\;
-	\While{S is not done state}{
-	With probability $\varepsilon$ choose random action $a_t$\;
-	otherwise, pick $a_t = \max_{a}Q(s_t, a;~\theta)$\;
-	Take action $a_t$ and observse reward $r_t$ and state $s_{t + 1}$\;
-	$Q(s, a) = Q(s_t, a_t) + \alpha(R + \gamma~max_{a}Q(s_{t + 1}, a) - Q(s_t, a_t))$\;
-	Store tuple $(s_t, a_t, r_t, s_{t + 1})$ in $\mathcal{D}$\;
-	Randomly sample a minibatch of tuples $(s_t, a_t, r_t, s_{t + 1})$ from $\mathcal{D}$\;
-	Every $C$ steps copy weights $\theta_{}^{-} = \theta$
-	}
+		Initialise S\;
+		\While{S is not done state}{
+			With probability $\varepsilon$ choose random action $a_t$\;
+			otherwise, pick $a_t = \max_{a}Q(s_t, a;~\theta)$\;
+			Take action $a_t$ and observse reward $r_t$ and state $s_{t + 1}$\;
+			Pre-process the state $s_{t + 1}$ as $\phi_{t + 1} = \phi(s_{t + 1})$\;
+			Store tuple $(\phi_{t}, a_t, r_t, \phi_{t + 1})$ in $\mathcal{D}$\;
+			Randomly sample a minibatch of tuples $(s_i, a_i, r_i, s_{i + 1})$ from $\mathcal{D}$\;
+			Set $y_i = \begin{cases}
+					r_i,                                                            & \text{if episode done at}~i + 1, \\
+					r_i + \gamma \max_{a'}\hat{Q}(\phi_{i + 1},~a';~\theta_{}^{-}), & \text{otherwise}.
+				\end{cases}$\;
+			Perform gradient descent on $\left( y_i - Q(\phi_i,~a_i;~\theta)\right)^2$ wrt. $\theta$\;
+			Every $C$ steps copy weights $\theta_{}^{-} = \theta$
+		}
 	}
 	\caption{Deep Q-Learning with Experience replay}
 	\label{algo:dqn}
